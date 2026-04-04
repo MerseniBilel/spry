@@ -2,9 +2,9 @@
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/spry_white.svg" />
     <source media="(prefers-color-scheme: light)" srcset="assets/spry_black.svg" />
-    <img src="assets/spry_black.svg" width="48" alt="Spry logo" />
+    <img src="assets/spry_black.svg" height="36" alt="Spry logo" />
   </picture>
-  &nbsp;Spry
+  Spry
 </h1>
 
 <p align="center">
