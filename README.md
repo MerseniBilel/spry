@@ -1,11 +1,14 @@
-<h1 align="center">
+<div align="center">
+<table><tr><td valign="middle">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/spry_white.svg" />
     <source media="(prefers-color-scheme: light)" srcset="assets/spry_black.svg" />
     <img src="assets/spry_black.svg" height="80" alt="Spry logo" />
   </picture>
-  Spry
-</h1>
+</td><td valign="middle">
+  <h1>Spry</h1>
+</td></tr></table>
+</div>
 
 <p align="center">
   <strong>Define once, generate everything.</strong>
