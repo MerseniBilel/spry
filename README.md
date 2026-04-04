@@ -1,14 +1,16 @@
-<div align="center">
-<table><tr><td valign="middle">
+<p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/spry_white.svg" />
     <source media="(prefers-color-scheme: light)" srcset="assets/spry_black.svg" />
     <img src="assets/spry_black.svg" height="80" alt="Spry logo" />
   </picture>
-</td><td valign="middle">
-  <h1>Spry</h1>
-</td></tr></table>
-</div>
+  &nbsp;&nbsp;
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://readme-typing-svg.demolab.com?font=Inter&weight=800&size=48&pause=99999&color=FAF9F5&vCenter=true&width=160&height=80&lines=Spry" />
+    <source media="(prefers-color-scheme: light)" srcset="https://readme-typing-svg.demolab.com?font=Inter&weight=800&size=48&pause=99999&color=09090B&vCenter=true&width=160&height=80&lines=Spry" />
+    <img src="https://readme-typing-svg.demolab.com?font=Inter&weight=800&size=48&pause=99999&color=09090B&vCenter=true&width=160&height=80&lines=Spry" alt="Spry" height="80" />
+  </picture>
+</p>
 
 <p align="center">
   <strong>Define once, generate everything.</strong>
