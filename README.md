@@ -1,8 +1,11 @@
-<p align="center">
-  <img src="assets/spry_black.svg" width="120" alt="Spry logo" />
-</p>
-
-<h1 align="center">Spry</h1>
+<h1 align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/spry_white.svg" />
+    <source media="(prefers-color-scheme: light)" srcset="assets/spry_black.svg" />
+    <img src="assets/spry_black.svg" width="48" alt="Spry logo" />
+  </picture>
+  &nbsp;Spry
+</h1>
 
 <p align="center">
   <strong>Define once, generate everything.</strong>
