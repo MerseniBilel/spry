@@ -1,0 +1,35 @@
+{
+  "name": "spry",
+  "version": "0.0.1",
+  "description": "CLI tool to scaffold production-ready React Native apps with Clean Architecture",
+  "type": "module",
+  "bin": {
+    "spry": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "src/templates"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src/"
+  },
+  "dependencies": {
+    "@clack/prompts": "1.2.0",
+    "chalk": "5.6.2",
+    "commander": "14.0.3",
+    "mustache": "4.2.0",
+    "ts-morph": "27.0.2"
+  },
+  "devDependencies": {
+    "@types/mustache": "4.2.6",
+    "@types/node": "22.15.3",
+    "eslint": "10.2.0",
+    "tsx": "4.21.0",
+    "typescript": "5.8.3",
+    "vitest": "3.1.4"
+  }
+}
