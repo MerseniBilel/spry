@@ -1,30 +1,30 @@
 // Method decorators — HTTP verb + path
-export function GET(path: string): MethodDecorator {
+export function GET(_path: string): MethodDecorator {
   return (_target, _propertyKey, descriptor) => descriptor
 }
 
-export function POST(path: string): MethodDecorator {
+export function POST(_path: string): MethodDecorator {
   return (_target, _propertyKey, descriptor) => descriptor
 }
 
-export function PATCH(path: string): MethodDecorator {
+export function PATCH(_path: string): MethodDecorator {
   return (_target, _propertyKey, descriptor) => descriptor
 }
 
-export function PUT(path: string): MethodDecorator {
+export function PUT(_path: string): MethodDecorator {
   return (_target, _propertyKey, descriptor) => descriptor
 }
 
-export function DELETE(path: string): MethodDecorator {
+export function DELETE(_path: string): MethodDecorator {
   return (_target, _propertyKey, descriptor) => descriptor
 }
 
 // Parameter decorators
-export function Param(name: string): ParameterDecorator {
+export function Param(_name: string): ParameterDecorator {
   return () => {}
 }
 
-export function Query(name: string): ParameterDecorator {
+export function Query(_name: string): ParameterDecorator {
   return () => {}
 }
 
@@ -32,17 +32,17 @@ export function Body(): ParameterDecorator {
   return () => {}
 }
 
-export function Header(name: string): ParameterDecorator {
+export function Header(_name: string): ParameterDecorator {
   return () => {}
 }
 
 // Class decorator
-export function BaseURL(url: string): ClassDecorator {
+export function BaseURL(_url: string): ClassDecorator {
   return (target) => target
 }
 
 // Extra method decorators
-export function Cache(seconds: number): MethodDecorator {
+export function Cache(_seconds: number): MethodDecorator {
   return (_target, _propertyKey, descriptor) => descriptor
 }
 

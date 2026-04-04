@@ -13,6 +13,7 @@
     "lint": "eslint src/"
   },
   "devDependencies": {
+    "eslint": "10.2.0",
     "typescript": "5.8.3"
   }
 }
