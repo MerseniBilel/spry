@@ -5,7 +5,7 @@
   "scripts": {
     "build": "pnpm -r build",
     "dev": "pnpm --filter spry dev",
-    "spry": "pnpm --filter spry dev --",
+    "spry": "pnpm --filter spry exec tsx src/index.ts",
     "test": "pnpm -r test",
     "lint": "pnpm -r lint",
     "format": "prettier --write ."

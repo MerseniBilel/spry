@@ -1,0 +1,23 @@
+import { DomainError } from './DomainError'
+
+export class HttpError extends DomainError {
+  constructor(
+    public readonly status: number,
+    message: string
+  ) {
+    super(`HTTP_${status}`, message)
+    this.name = 'HttpError'
+  }
+
+  get isNotFound(): boolean {
+    return this.status === 404
+  }
+
+  get isUnauthorized(): boolean {
+    return this.status === 401
+  }
+
+  get isServerError(): boolean {
+    return this.status >= 500
+  }
+}
