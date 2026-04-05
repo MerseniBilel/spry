@@ -102,6 +102,8 @@ Spry parses your abstract class, resolves all types, and generates the full feat
 spry build profile --dry-run   # preview what will be generated
 spry build profile --force     # regenerate all Spry-owned files
 spry build all                 # build every feature
+spry format                    # format generated code with Prettier
+spry skill                     # install Claude Code AI skill
 ```
 
 ## How It Works
@@ -176,8 +178,18 @@ The generated code uses:
 
 | Package | Description |
 |---------|-------------|
-| [`spry`](cli/) | CLI tool |
+| [`@spry-cli/spry`](cli/) | CLI tool |
 | [`@spry-cli/decorators`](packages/decorators/) | TypeScript decorators for contracts |
+
+## Claude Code Integration
+
+Spry ships with a skill for [Claude Code](https://claude.ai/code):
+
+```bash
+spry skill
+```
+
+This teaches the AI assistant how to use Spry — create features, write contracts, generate code, and follow best practices. Use `/spry <feature-name>` in Claude Code to scaffold a feature with AI assistance.
 
 ## Roadmap
 

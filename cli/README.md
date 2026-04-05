@@ -92,6 +92,7 @@ Runs Prettier on all feature files.
 | `spry build <feature> --dry-run` | Preview what would be generated |
 | `spry build <feature> --force` | Regenerate all Spry-owned files |
 | `spry format` | Format feature files with Prettier |
+| `spry skill` | Install Claude Code skill for AI-assisted development |
 
 ## Incremental Builds
 
@@ -139,6 +140,19 @@ Uses [`@spry-cli/decorators`](https://www.npmjs.com/package/@spry-cli/decorators
 | `@Query(name)` | Query string parameter |
 | `@Body()` | Request body |
 | `@Header(name)` | Request header |
+
+## Claude Code Integration
+
+Spry ships with a skill for [Claude Code](https://claude.ai/code) that teaches the AI assistant how to use Spry:
+
+```bash
+spry skill
+```
+
+This installs a skill in `.claude/skills/spry/` that enables:
+- `/spry contact` — Claude creates the full feature (models, contract, build, format)
+- Auto-detection when you ask to "create a feature" or "scaffold an API layer"
+- Knowledge of all decorators, file ownership rules, and best practices
 
 ## License
 

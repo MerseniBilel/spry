@@ -38,11 +38,13 @@ pnpm --filter spry test -- --run <path>  # run a single test file
 
 ## Architecture — How Spry Works
 
-### Three CLI Commands
+### CLI Commands
 
-1. **`spry init`** — scaffolds project config, installs deps, writes `.spryrc.json` (with checksum) and `.spry-manifest.json`
+1. **`spry init`** — scaffolds project config, installs deps, writes `.spryrc.json`, `.spry-manifest.json`, `.env`, `.prettierrc`
 2. **`spry new <feature>`** — creates domain skeleton (abstract repo class, model placeholder, empty dirs)
 3. **`spry build <feature|all>`** — parses abstract repo via ts-morph, generates all implementation files. Flags: `--dry-run`, `--force`
+4. **`spry format`** — runs Prettier on all feature files
+5. **`spry skill`** — installs Claude Code skill in `.claude/skills/spry/`
 
 ### Parsing Pipeline
 
