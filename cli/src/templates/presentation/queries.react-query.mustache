@@ -1,0 +1,41 @@
+import { {{{reactQueryImports}}} } from '@tanstack/react-query'
+import type { DomainError } from '@shared/errors'
+{{#typeImports}}
+import type { {{name}} } from '@features/{{{featureNameKebab}}}/domain/models/{{name}}'
+{{/typeImports}}
+import { {{#allMethods}}{{camelName}}UseCase{{#hasNext}}, {{/hasNext}}{{/allMethods}} } from '@features/{{{featureNameKebab}}}/di'
+{{#queries}}
+
+export function use{{Name}}({{#params}}{{name}}: {{type}}{{#hasNext}}, {{/hasNext}}{{/params}}) {
+  return useQuery<{{returnType}}, DomainError>({
+    queryKey: ['{{featureName}}', '{{name}}'{{#params}}, {{name}}{{/params}}],
+    queryFn: () => {{camelName}}UseCase.execute({{#params}}{{name}}{{#hasNext}}, {{/hasNext}}{{/params}}),
+{{#cacheSeconds}}
+    staleTime: {{cacheSeconds}} * 1000,
+{{/cacheSeconds}}
+  })
+}
+{{/queries}}
+{{#paginatedQueries}}
+
+export function use{{Name}}({{#params}}{{name}}: {{type}}{{#hasNext}}, {{/hasNext}}{{/params}}) {
+  return useInfiniteQuery<{{returnType}}, DomainError>({
+    queryKey: ['{{featureName}}', '{{name}}'{{#params}}, {{name}}{{/params}}],
+    queryFn: ({ pageParam }) => {{camelName}}UseCase.execute(pageParam as number),
+    initialPageParam: 1,
+    getNextPageParam: () => undefined, // TODO: implement pagination logic
+  })
+}
+{{/paginatedQueries}}
+{{#mutations}}
+
+export function use{{Name}}() {
+  return useMutation<{{returnType}}, DomainError, { {{#params}}{{name}}: {{type}}{{#hasNext}}; {{/hasNext}}{{/params}} }>({
+    mutationFn: ({ {{#params}}{{name}}{{#hasNext}}, {{/hasNext}}{{/params}} }) =>
+      {{camelName}}UseCase.execute({{#params}}{{name}}{{#hasNext}}, {{/hasNext}}{{/params}}),
+    onSuccess: () => {
+      // TODO: invalidate relevant queries
+    },
+  })
+}
+{{/mutations}}

@@ -1,0 +1,12 @@
+import { {{FeatureName}}RemoteDataSource } from './data/datasources/{{FeatureName}}RemoteDataSource'
+import { {{FeatureName}}RepositoryImpl } from './data/repositories/{{FeatureName}}RepositoryImpl'
+{{#allMethods}}
+import { {{Name}}UseCase } from './domain/usecases/{{Name}}UseCase'
+{{/allMethods}}
+
+const dataSource = new {{FeatureName}}RemoteDataSource()
+const repository = new {{FeatureName}}RepositoryImpl(dataSource)
+{{#allMethods}}
+
+export const {{camelName}}UseCase = new {{Name}}UseCase(repository)
+{{/allMethods}}

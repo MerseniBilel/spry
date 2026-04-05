@@ -1,5 +1,6 @@
 import { Command } from 'commander'
 import { logger } from '../utils/logger.js'
+import { pascalCase } from '../utils/string.js'
 import { ConfigReader } from '../config/ConfigReader.js'
 import { ManifestReader } from '../manifest/ManifestReader.js'
 import { ManifestWriter } from '../manifest/ManifestWriter.js'
@@ -62,7 +63,28 @@ export const newCommand = new Command('new')
     const manifestWriter = new ManifestWriter()
     await manifestWriter.addFeature(projectRoot, featureName)
 
+    const pascal = pascalCase(featureName)
+    const example = [
+      `import { GET, PATCH, Param, Body, BaseURL, Cache } from '@spry-cli/decorators'`,
+      ``,
+      `@BaseURL('/api/v1')`,
+      `export abstract class ${pascal}Repository {`,
+      ``,
+      `  @GET('/${featureName}/:id')`,
+      `  @Cache(60)`,
+      `  abstract get${pascal}(@Param('id') id: string): Promise<${pascal}>`,
+      ``,
+      `  @PATCH('/${featureName}/:id')`,
+      `  abstract update${pascal}(`,
+      `    @Param('id') id: string,`,
+      `    @Body() input: Update${pascal}Input`,
+      `  ): Promise<${pascal}>`,
+      `}`,
+    ].join('\n')
+
+    logger.note(example, 'Example — add methods to your repository')
+
     logger.outro(
-      `Feature "${featureName}" created! Next: define methods in ${featureName}/domain/repositories/ then run spry build ${featureName}`
+      `Run spry build ${featureName} when ready`
     )
   })

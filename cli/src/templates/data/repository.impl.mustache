@@ -1,0 +1,29 @@
+import { {{FeatureName}}Repository } from '@features/{{{featureNameKebab}}}/domain/repositories/{{FeatureName}}Repository'
+{{#typeImports}}
+import type { {{name}} } from '@features/{{{featureNameKebab}}}/domain/models/{{name}}'
+{{/typeImports}}
+import { {{FeatureName}}RemoteDataSource } from '../datasources/{{FeatureName}}RemoteDataSource'
+
+export class {{FeatureName}}RepositoryImpl extends {{FeatureName}}Repository {
+  constructor(private dataSource: {{FeatureName}}RemoteDataSource) {
+    super()
+  }
+{{#queries}}
+
+  async {{name}}({{#params}}{{name}}: {{type}}{{#hasNext}}, {{/hasNext}}{{/params}}): Promise<{{returnType}}> {
+    return this.dataSource.{{name}}({{#params}}{{name}}{{#hasNext}}, {{/hasNext}}{{/params}})
+  }
+{{/queries}}
+{{#paginatedQueries}}
+
+  async {{name}}({{#params}}{{name}}: {{type}}{{#hasNext}}, {{/hasNext}}{{/params}}): Promise<{{returnType}}> {
+    return this.dataSource.{{name}}({{#params}}{{name}}{{#hasNext}}, {{/hasNext}}{{/params}})
+  }
+{{/paginatedQueries}}
+{{#mutations}}
+
+  async {{name}}({{#params}}{{name}}: {{type}}{{#hasNext}}, {{/hasNext}}{{/params}}): Promise<{{returnType}}> {
+    return this.dataSource.{{name}}({{#params}}{{name}}{{#hasNext}}, {{/hasNext}}{{/params}})
+  }
+{{/mutations}}
+}

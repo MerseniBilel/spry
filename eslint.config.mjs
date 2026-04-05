@@ -32,6 +32,12 @@ export default tseslint.config(
     },
   },
   {
-    ignores: ['**/dist/', '**/node_modules/'],
+    files: ['**/tests/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-non-null-assertion': 'off',
+    },
+  },
+  {
+    ignores: ['**/dist/', '**/node_modules/', '**/tests/fixtures/'],
   },
 )

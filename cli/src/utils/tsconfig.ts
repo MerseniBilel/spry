@@ -20,6 +20,10 @@ export async function patchTsConfig(
   config.compilerOptions ??= {}
   config.compilerOptions.experimentalDecorators = true
   config.compilerOptions.emitDecoratorMetadata = true
+  config.compilerOptions.paths = {
+    '@features/*': ['./src/features/*'],
+    '@shared/*': ['./src/shared/*'],
+  }
 
   await writeFileWithDir(filePath, JSON.stringify(config, null, 2))
   return true

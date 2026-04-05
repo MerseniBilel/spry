@@ -11,7 +11,7 @@ export class FileGenerator {
   ): Promise<string> {
     const fullPath = join(TEMPLATES_DIR, templatePath)
     const template = await readFileContent(fullPath)
-    return Mustache.render(template, context)
+    return Mustache.render(template, context).trimEnd() + '\n'
   }
 
   async renderAndWrite(

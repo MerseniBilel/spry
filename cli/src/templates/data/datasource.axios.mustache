@@ -1,0 +1,28 @@
+import { httpClient } from '@shared/http/httpClient'
+{{#typeImports}}
+import type { {{name}} } from '@features/{{{featureNameKebab}}}/domain/models/{{name}}'
+{{/typeImports}}
+
+export class {{FeatureName}}RemoteDataSource {
+{{#queries}}
+
+  async {{name}}({{#params}}{{name}}: {{type}}{{#hasNext}}, {{/hasNext}}{{/params}}): Promise<{{returnType}}> {
+    const { data } = await httpClient.get<{{returnType}}>(`{{{interpolatedPath}}}`)
+    return data
+  }
+{{/queries}}
+{{#paginatedQueries}}
+
+  async {{name}}({{#params}}{{name}}: {{type}}{{#hasNext}}, {{/hasNext}}{{/params}}): Promise<{{returnType}}> {
+    const { data } = await httpClient.get<{{returnType}}>(`{{{interpolatedPath}}}`)
+    return data
+  }
+{{/paginatedQueries}}
+{{#mutations}}
+
+  async {{name}}({{#params}}{{name}}: {{type}}{{#hasNext}}, {{/hasNext}}{{/params}}): Promise<{{returnType}}> {
+    const { data } = await httpClient.{{lowerHttpMethod}}<{{returnType}}>(`{{{interpolatedPath}}}`{{#hasBody}}, {{bodyParamName}}{{/hasBody}})
+    return data
+  }
+{{/mutations}}
+}

@@ -1,0 +1,25 @@
+import { httpClient } from '@shared/http/httpClient'
+{{#typeImports}}
+import type { {{name}} } from '@features/{{{featureNameKebab}}}/domain/models/{{name}}'
+{{/typeImports}}
+
+export class {{FeatureName}}RemoteDataSource {
+{{#queries}}
+
+  async {{name}}({{#params}}{{name}}: {{type}}{{#hasNext}}, {{/hasNext}}{{/params}}): Promise<{{returnType}}> {
+    return httpClient.get<{{returnType}}>(`{{{interpolatedPath}}}`)
+  }
+{{/queries}}
+{{#paginatedQueries}}
+
+  async {{name}}({{#params}}{{name}}: {{type}}{{#hasNext}}, {{/hasNext}}{{/params}}): Promise<{{returnType}}> {
+    return httpClient.get<{{returnType}}>(`{{{interpolatedPath}}}`)
+  }
+{{/paginatedQueries}}
+{{#mutations}}
+
+  async {{name}}({{#params}}{{name}}: {{type}}{{#hasNext}}, {{/hasNext}}{{/params}}): Promise<{{returnType}}> {
+    return httpClient.{{lowerHttpMethod}}<{{returnType}}>(`{{{interpolatedPath}}}`{{#hasBody}}, {{bodyParamName}}{{/hasBody}})
+  }
+{{/mutations}}
+}

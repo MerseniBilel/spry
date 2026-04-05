@@ -32,6 +32,13 @@ describe('patchTsConfig', () => {
     expect(config.compilerOptions.experimentalDecorators).toBe(true)
     expect(config.compilerOptions.emitDecoratorMetadata).toBe(true)
     expect(config.compilerOptions.strict).toBe(true)
+    expect(config.compilerOptions.paths['@features/*']).toEqual([
+      './src/features/*',
+    ])
+    expect(config.compilerOptions.paths['@shared/*']).toEqual([
+      './src/shared/*',
+    ])
+    expect(config.compilerOptions.baseUrl).toBeUndefined()
   })
 
   it('creates compilerOptions if missing', async () => {

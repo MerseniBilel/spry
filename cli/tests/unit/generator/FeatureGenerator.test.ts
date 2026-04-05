@@ -59,7 +59,7 @@ describe('FeatureGenerator', () => {
       'presentation/hooks',
       'presentation/state',
       'domain/usecases',
-      'domain/errors',
+      'domain/models',
       'data/repositories',
       'data/datasources',
       'data/models',

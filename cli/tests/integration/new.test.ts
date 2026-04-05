@@ -5,7 +5,7 @@ import {
   beforeEach,
   afterEach,
 } from 'vitest'
-import { mkdtemp, rm, readFile, access, writeFile } from 'node:fs/promises'
+import { mkdtemp, rm, readFile, access } from 'node:fs/promises'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { ConfigWriter } from '../../src/config/ConfigWriter.js'
@@ -15,7 +15,6 @@ import { ManifestReader } from '../../src/manifest/ManifestReader.js'
 import { FeatureGenerator } from '../../src/generator/FeatureGenerator.js'
 import { getDefaultChoices } from '../../src/prompts/initPrompts.js'
 import { validateFeatureName } from '../../src/prompts/newPrompts.js'
-import type { SpryManifest } from '../../src/types/manifest.js'
 
 async function exists(path: string): Promise<boolean> {
   try {
@@ -82,7 +81,7 @@ describe('spry new (integration)', () => {
       'presentation/hooks',
       'presentation/state',
       'domain/usecases',
-      'domain/errors',
+      'domain/models',
       'data/repositories',
       'data/datasources',
       'data/models',

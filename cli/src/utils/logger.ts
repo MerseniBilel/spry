@@ -22,6 +22,10 @@ export const logger = {
     clack.log.warn(chalk.yellow(message))
   },
 
+  note(message: string, title?: string) {
+    clack.note(message, title)
+  },
+
   outro(message: string) {
     clack.outro(message)
   },

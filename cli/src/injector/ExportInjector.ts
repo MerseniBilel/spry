@@ -1,3 +1,20 @@
+import { type SourceFile, VariableDeclarationKind } from 'ts-morph'
+
 export class ExportInjector {
-  // TODO: addVariableStatement() into di.ts via ts-morph
+  inject(
+    sourceFile: SourceFile,
+    name: string,
+    initializer: string
+  ): boolean {
+    const existing = sourceFile.getVariableDeclaration(name)
+    if (existing) return false
+
+    sourceFile.addVariableStatement({
+      isExported: true,
+      declarationKind: VariableDeclarationKind.Const,
+      declarations: [{ name, initializer }],
+    })
+
+    return true
+  }
 }

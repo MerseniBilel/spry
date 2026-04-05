@@ -1,6 +1,8 @@
 import { HttpError } from '../errors/HttpError'
 import { NetworkError } from '../errors/NetworkError'
 
+const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? ''
+
 interface RequestOptions {
   method: string
   headers?: Record<string, string>
@@ -8,9 +10,10 @@ interface RequestOptions {
 }
 
 async function request<T>(
-  url: string,
+  path: string,
   options: RequestOptions
 ): Promise<T> {
+  const url = `${BASE_URL}${path}`
   let response: Response
 
   try {
@@ -35,16 +38,16 @@ async function request<T>(
 }
 
 export const httpClient = {
-  get<T>(url: string, headers?: Record<string, string>) {
-    return request<T>(url, { method: 'GET', headers })
+  get<T>(path: string, headers?: Record<string, string>) {
+    return request<T>(path, { method: 'GET', headers })
   },
 
   post<T>(
-    url: string,
+    path: string,
     body: unknown,
     headers?: Record<string, string>
   ) {
-    return request<T>(url, {
+    return request<T>(path, {
       method: 'POST',
       headers,
       body: JSON.stringify(body),
@@ -52,11 +55,11 @@ export const httpClient = {
   },
 
   patch<T>(
-    url: string,
+    path: string,
     body: unknown,
     headers?: Record<string, string>
   ) {
-    return request<T>(url, {
+    return request<T>(path, {
       method: 'PATCH',
       headers,
       body: JSON.stringify(body),
@@ -64,18 +67,18 @@ export const httpClient = {
   },
 
   put<T>(
-    url: string,
+    path: string,
     body: unknown,
     headers?: Record<string, string>
   ) {
-    return request<T>(url, {
+    return request<T>(path, {
       method: 'PUT',
       headers,
       body: JSON.stringify(body),
     })
   },
 
-  delete<T>(url: string, headers?: Record<string, string>) {
-    return request<T>(url, { method: 'DELETE', headers })
+  delete<T>(path: string, headers?: Record<string, string>) {
+    return request<T>(path, { method: 'DELETE', headers })
   },
 }

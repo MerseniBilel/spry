@@ -4,6 +4,7 @@ import { Command } from 'commander'
 import { initCommand } from './commands/init.js'
 import { newCommand } from './commands/new.js'
 import { buildCommand } from './commands/build.js'
+import { formatCommand } from './commands/format.js'
 
 const program = new Command()
 
@@ -15,5 +16,6 @@ program
 program.addCommand(initCommand)
 program.addCommand(newCommand)
 program.addCommand(buildCommand)
+program.addCommand(formatCommand)
 
 program.parse()

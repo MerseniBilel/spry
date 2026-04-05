@@ -3,13 +3,15 @@ import * as clack from '@clack/prompts'
 import { execSync } from 'node:child_process'
 import { join, resolve } from 'node:path'
 import { logger } from '../utils/logger.js'
-import { fileExists } from '../utils/fs.js'
+import { fileExists, writeFileWithDir } from '../utils/fs.js'
 import { ConfigWriter } from '../config/ConfigWriter.js'
 import { ConfigReader } from '../config/ConfigReader.js'
 import { ManifestWriter } from '../manifest/ManifestWriter.js'
 import { PackageInstaller } from '../installer/PackageInstaller.js'
 import { ScaffoldGenerator } from '../generator/ScaffoldGenerator.js'
 import { patchTsConfig } from '../utils/tsconfig.js'
+import { patchEslintConfig } from '../utils/eslint.js'
+import { ensurePrettierConfig } from '../utils/format.js'
 import {
   runInitPrompts,
   getDefaultChoices,
@@ -130,6 +132,16 @@ export const initCommand = new Command('init')
         spin.stop('tsconfig.json not found — skipped')
       }
 
+      // Generate .env with API base URL placeholder
+      const envPath = join(projectRoot, '.env')
+      if (!(await fileExists(envPath))) {
+        await writeFileWithDir(
+          envPath,
+          'EXPO_PUBLIC_API_URL=http://localhost:3000\n'
+        )
+        logger.success('.env created (set EXPO_PUBLIC_API_URL)')
+      }
+
       const srcRoot = join(projectRoot, 'src')
 
       spin.start('Generating shared scaffold...')
@@ -139,6 +151,17 @@ export const initCommand = new Command('init')
         choices.networkLayer
       )
       spin.stop(`Scaffold generated (${created.length} entries)`)
+
+      await ensurePrettierConfig(projectRoot)
+      logger.success('.prettierrc created')
+
+      spin.start('Patching ESLint config...')
+      const eslintPatched = await patchEslintConfig(projectRoot)
+      if (eslintPatched) {
+        spin.stop('ESLint config patched (repository files excluded)')
+      } else {
+        spin.stop('ESLint config not found — skipped')
+      }
 
       const deps = getDependencies(choices)
 
