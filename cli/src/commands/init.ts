@@ -20,7 +20,7 @@ import type {
 } from '../types/config.js'
 
 function getDependencies(choices: SpryUserChoices): string[] {
-  const deps = ['@tanstack/react-query', 'zustand']
+  const deps = ['@spry/decorators', '@tanstack/react-query', 'zustand']
   if (choices.networkLayer === 'axios') deps.push('axios')
   return deps
 }

@@ -2,11 +2,32 @@
   "name": "@spry/decorators",
   "version": "0.0.1",
   "description": "TypeScript decorators for defining Spry repository contracts",
+  "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "files": [
     "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MerseniBilel/spry.git",
+    "directory": "packages/decorators"
+  },
+  "keywords": [
+    "spry",
+    "decorators",
+    "react-native",
+    "expo",
+    "clean-architecture",
+    "typescript",
+    "code-generation"
   ],
   "scripts": {
     "build": "tsc",
