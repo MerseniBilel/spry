@@ -1,11 +1,11 @@
-# @spry/decorators
+# @spry-cli/decorators
 
 TypeScript decorators for defining [Spry](https://github.com/MerseniBilel/spry) repository contracts. Annotate an abstract class with HTTP verbs and parameter bindings, then let the Spry CLI generate your entire data layer, use cases, and state management.
 
 ## Install
 
 ```bash
-npm install @spry/decorators
+npm install @spry-cli/decorators
 ```
 
 ## Usage
@@ -22,7 +22,7 @@ import {
   Body,
   Cache,
   Paginated,
-} from '@spry/decorators'
+} from '@spry-cli/decorators'
 
 @BaseURL('/api/v1')
 export abstract class ProfileRepository {

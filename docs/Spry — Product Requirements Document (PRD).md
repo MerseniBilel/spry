@@ -10,7 +10,7 @@
 **Spry** is an open-source CLI tool that helps React Native (Expo) developers scaffold production-ready mobile apps and features using **Clean Architecture / DDD** principles. The developer defines a typed contract (abstract repository class with TypeScript decorators), and Spry generates all the boilerplate — data layer, use cases, state management, dependency injection — automatically.
 
 - **npm package:** `spry` (confirmed available)
-- **Companion package:** `@spry/decorators`
+- **Companion package:** `@spry-cli/decorators`
 - **License:** MIT or Apache 2.0 (TBD)
 - **Target platform:** React Native (Expo) — **mobile-only**, no web/RSC concerns
 - **Stack:** Node.js CLI written in TypeScript
@@ -34,7 +34,7 @@ The developer writes the contract. Spry handles the mechanical boilerplate. This
 ```
 spry/
 ├── packages/
-│   └── decorators/          ← @spry/decorators npm package
+│   └── decorators/          ← @spry-cli/decorators npm package
 ├── cli/                     ← spry CLI (main package)
 ├── example/                 ← Expo app using Spry (integration tests + showcase)
 ├── docs/
@@ -131,7 +131,7 @@ Creates the domain skeleton for a new feature. Generates:
 
 Developer then:
 
-1. Fills in the abstract class method signatures with `@spry/decorators`
+1. Fills in the abstract class method signatures with `@spry-cli/decorators`
 2. Runs `spry build <featureName>`
 
 ## `spry build <featureName | all>`
@@ -145,7 +145,7 @@ Flags:
 
 ---
 
-# 5. `@spry/decorators` Package
+# 5. `@spry-cli/decorators` Package
 
 Installed in the **Expo project** (not the CLI). Provides TypeScript decorators that the developer uses to annotate the abstract repository. The CLI reads these decorators statically via ts-morph AST — no runtime execution needed.
 
@@ -176,7 +176,7 @@ Installed in the **Expo project** (not the CLI). Provides TypeScript decorators 
 ## Example usage
 
 ```tsx
-import { GET, PATCH, DELETE, Param, Body, BaseURL, Cache, Paginated } from '@spry/decorators'
+import { GET, PATCH, DELETE, Param, Body, BaseURL, Cache, Paginated } from '@spry-cli/decorators'
 
 @BaseURL('/api/v1')
 export abstract class ProfileRepository {
@@ -527,7 +527,7 @@ Ship exactly this — nothing more:
 - `spry init` with REST + fetch or axios + React Query + Zustand
 - `spry new <featureName>`
 - `spry build <featureName>` — generate + inject
-- `@spry/decorators` package with full decorator API
+- `@spry-cli/decorators` package with full decorator API
 - All unit + integration tests passing
 - `example/` Expo app demonstrating a Profile feature end-to-end
 - README with quickstart guide

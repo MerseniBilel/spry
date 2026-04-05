@@ -62,7 +62,7 @@ describe('spry new (integration)', () => {
     )
     expect(repoContent).toContain("@BaseURL('/api/v1/profile')")
     expect(repoContent).toContain(
-      "import { BaseURL } from '@spry/decorators'"
+      "import { BaseURL } from '@spry-cli/decorators'"
     )
     expect(repoContent).toContain('spry build profile')
 

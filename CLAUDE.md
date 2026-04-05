@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Spry is an open-source CLI tool that scaffolds production-ready React Native (Expo) mobile apps using Clean Architecture / DDD. Developers define a typed contract (abstract repository class with TypeScript decorators), and Spry generates all boilerplate — data layer, use cases, state management, DI wiring.
 
-- **npm package:** `spry` (CLI), `@spry/decorators` (companion decorators package)
+- **npm package:** `spry` (CLI), `@spry-cli/decorators` (companion decorators package)
 - **Target:** React Native (Expo) — mobile-only, no web/RSC
 - **CLI written in TypeScript**
 
@@ -14,7 +14,7 @@ Spry is an open-source CLI tool that scaffolds production-ready React Native (Ex
 
 ```
 spry/
-├── packages/decorators/     ← @spry/decorators npm package
+├── packages/decorators/     ← @spry-cli/decorators npm package
 ├── cli/                     ← spry CLI (main package)
 ├── example/                 ← Expo app for integration tests + showcase
 ├── docs/
@@ -28,7 +28,7 @@ spry/
 ```bash
 pnpm install                          # install all workspace deps
 pnpm --filter spry build              # build CLI
-pnpm --filter @spry/decorators build  # build decorators package
+pnpm --filter @spry-cli/decorators build  # build decorators package
 pnpm --filter spry test               # run all CLI tests
 pnpm --filter spry test -- --run <path>  # run a single test file
 ```
@@ -107,7 +107,7 @@ Commander.js (CLI), Clack (prompts), Mustache (templates), ts-morph (TS read+wri
 - **Integration tests** (`cli/tests/integration/`) — full CLI commands in temp directories, no mocking (real fs, real ts-morph, real Mustache)
 - **Fixtures** (`cli/tests/fixtures/`) — sample repository files, config files, expected output directories for snapshot diffing
 
-## `@spry/decorators` API
+## `@spry-cli/decorators` API
 
 Method decorators: `@GET`, `@POST`, `@PATCH`, `@PUT`, `@DELETE` (path), `@Cache(seconds)`, `@Paginated()`
 Parameter decorators: `@Param(name)`, `@Query(name)`, `@Body()`, `@Header(name)`

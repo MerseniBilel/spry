@@ -29,10 +29,10 @@
 
 ## What is Spry?
 
-Spry reads a typed contract you write — an abstract repository class decorated with `@spry/decorators` — and generates the entire implementation stack: data layer, use cases, state management, and dependency injection wiring. Clean Architecture boundaries are enforced by default because Spry generates them for you.
+Spry reads a typed contract you write — an abstract repository class decorated with `@spry-cli/decorators` — and generates the entire implementation stack: data layer, use cases, state management, and dependency injection wiring. Clean Architecture boundaries are enforced by default because Spry generates them for you.
 
 ```ts
-import { GET, PATCH, DELETE, Param, Body, BaseURL, Cache } from '@spry/decorators'
+import { GET, PATCH, DELETE, Param, Body, BaseURL, Cache } from '@spry-cli/decorators'
 
 @BaseURL('/api/v1')
 export abstract class ProfileRepository {
@@ -86,7 +86,7 @@ npx spry init
 npx spry new profile
 ```
 
-This creates the domain skeleton. Open `src/features/profile/domain/repositories/ProfileRepository.ts` and define your contract using `@spry/decorators`.
+This creates the domain skeleton. Open `src/features/profile/domain/repositories/ProfileRepository.ts` and define your contract using `@spry-cli/decorators`.
 
 ### Generate the implementation
 
@@ -117,7 +117,7 @@ Abstract Repository  →  ts-morph parser  →  Normalized JSON  →  Mustache t
 3. **Generate** — Mustache templates (selected by your `.spryrc.json` config) render the implementation files
 4. **Inject** — on subsequent builds, new methods are injected into existing files via ts-morph AST operations (no regex)
 
-## `@spry/decorators`
+## `@spry-cli/decorators`
 
 Installed in your Expo project. Decorators are read statically via AST — no runtime overhead.
 
@@ -177,7 +177,7 @@ The generated code uses:
 | Package | Description |
 |---------|-------------|
 | [`spry`](cli/) | CLI tool |
-| [`@spry/decorators`](packages/decorators/) | TypeScript decorators for contracts |
+| [`@spry-cli/decorators`](packages/decorators/) | TypeScript decorators for contracts |
 
 ## Roadmap
 

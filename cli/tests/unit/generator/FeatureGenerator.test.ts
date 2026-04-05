@@ -37,7 +37,7 @@ describe('FeatureGenerator', () => {
     )
     expect(content).toContain('export abstract class ProfileRepository')
     expect(content).toContain("@BaseURL('/api/v1/profile')")
-    expect(content).toContain("import { BaseURL } from '@spry/decorators'")
+    expect(content).toContain("import { BaseURL } from '@spry-cli/decorators'")
   })
 
   it('generates domain model file', async () => {

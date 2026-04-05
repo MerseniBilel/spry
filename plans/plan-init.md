@@ -91,7 +91,7 @@ Utilities already implemented: `logger.ts`, `fs.ts` (ensureDir, writeFileWithDir
   - Runs the correct install command via `child_process.execSync` or `execa`
   - Shows Clack spinner during installation
 - [x] Define dependency lists based on config choices:
-  - **Always:** `@spry/decorators`
+  - **Always:** `@spry-cli/decorators`
   - **React Query:** `@tanstack/react-query`
   - **Zustand:** `zustand`
   - **Axios (if selected):** `axios`
