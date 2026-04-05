@@ -4,6 +4,8 @@
   "packageManager": "pnpm@10.11.0",
   "scripts": {
     "build": "pnpm -r build",
+    "link:cli": "pnpm --filter spry build && cd cli && pnpm link --global",
+    "unlink:cli": "cd cli && pnpm unlink --global",
     "dev": "pnpm --filter spry dev",
     "spry": "pnpm --filter spry exec tsx src/index.ts",
     "test": "pnpm -r test",

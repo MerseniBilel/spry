@@ -31,10 +31,16 @@ function createExpoApp(options: {
   pm: PackageManager
 }): void {
   const { projectName, cwd, pm } = options
-  const runCmd = pm === 'npm' ? 'npx' : pm
+
+  const runCmds: Record<PackageManager, string> = {
+    npm: 'npx',
+    pnpm: 'pnpm dlx',
+    yarn: 'yarn dlx',
+    bun: 'bunx',
+  }
 
   execSync(
-    `${runCmd} create-expo-app@latest ${projectName} --yes`,
+    `${runCmds[pm]} create-expo-app@latest ${projectName} --yes`,
     { cwd, stdio: 'inherit' }
   )
 }

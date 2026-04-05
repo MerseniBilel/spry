@@ -1,10 +1,8 @@
-import { join, dirname } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { join } from 'node:path'
 import Mustache from 'mustache'
-import { readFileContent, writeFileWithDir } from '../utils/fs.js'
+import { readFileContent, writeFileWithDir, getTemplatesDir } from '../utils/fs.js'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const TEMPLATES_DIR = join(__dirname, '..', 'templates')
+const TEMPLATES_DIR = getTemplatesDir()
 
 export class FileGenerator {
   async render(

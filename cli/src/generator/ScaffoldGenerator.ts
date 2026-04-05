@@ -1,10 +1,8 @@
-import { join, dirname } from 'node:path'
-import { readFileContent, writeFileWithDir, ensureDir } from '../utils/fs.js'
-import { fileURLToPath } from 'node:url'
+import { join } from 'node:path'
+import { readFileContent, writeFileWithDir, ensureDir, getTemplatesDir } from '../utils/fs.js'
 import type { NetworkLayer } from '../types/config.js'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const TEMPLATES_DIR = join(__dirname, '..', 'templates', 'shared')
+const TEMPLATES_DIR = join(getTemplatesDir(), 'shared')
 
 const SCAFFOLD_DIRS = [
   'shared/components',
