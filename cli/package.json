@@ -1,6 +1,6 @@
 {
   "name": "@spry-cli/spry",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "CLI tool to scaffold production-ready React Native apps with Clean Architecture",
   "type": "module",
   "bin": {
@@ -8,7 +8,8 @@
   },
   "files": [
     "dist",
-    "src/templates"
+    "src/templates",
+    "src/skills"
   ],
   "scripts": {
     "build": "tsc",
