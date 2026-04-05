@@ -4,13 +4,19 @@
   "packageManager": "pnpm@10.11.0",
   "scripts": {
     "build": "pnpm -r build",
-    "link:cli": "pnpm --filter spry build && cd cli && pnpm link --global",
+    "link:cli": "pnpm --filter @spry-cli/spry build && cd cli && pnpm link --global",
     "unlink:cli": "cd cli && pnpm unlink --global",
-    "dev": "pnpm --filter spry dev",
-    "spry": "pnpm --filter spry exec tsx src/index.ts",
+    "dev": "pnpm --filter @spry-cli/spry dev",
+    "spry": "pnpm --filter @spry-cli/spry exec tsx src/index.ts",
     "test": "pnpm -r test",
     "lint": "pnpm -r lint",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "bump:cli:patch": "node scripts/bump-version.mjs cli --patch",
+    "bump:cli:minor": "node scripts/bump-version.mjs cli --minor",
+    "bump:cli:major": "node scripts/bump-version.mjs cli --major",
+    "bump:decorators:patch": "node scripts/bump-version.mjs decorators --patch",
+    "bump:decorators:minor": "node scripts/bump-version.mjs decorators --minor",
+    "bump:decorators:major": "node scripts/bump-version.mjs decorators --major"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

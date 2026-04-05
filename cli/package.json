@@ -1,5 +1,5 @@
 {
-  "name": "spry",
+  "name": "@spry-cli/spry",
   "version": "0.0.1",
   "description": "CLI tool to scaffold production-ready React Native apps with Clean Architecture",
   "type": "module",
