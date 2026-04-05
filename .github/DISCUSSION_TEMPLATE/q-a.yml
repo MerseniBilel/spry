@@ -1,0 +1,28 @@
+title: "[Question]: "
+labels:
+  - question
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have a question about Spry? Ask here!
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: What do you need help with?
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: What have you tried?
+      description: Any steps you've already taken or docs you've read?
+
+  - type: input
+    id: version
+    attributes:
+      label: Spry Version (if relevant)
+      placeholder: "0.0.4"

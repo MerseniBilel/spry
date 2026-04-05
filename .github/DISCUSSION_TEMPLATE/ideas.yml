@@ -1,0 +1,29 @@
+title: "[Idea]: "
+labels:
+  - idea
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Share your idea for Spry! This is the place for brainstorming and early-stage suggestions.
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: What's the idea?
+      description: Describe your idea in a few sentences
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Why would this be useful? What's your use case?
+
+  - type: textarea
+    id: examples
+    attributes:
+      label: Examples
+      description: How would this look in practice? Code examples welcome.
+      render: typescript

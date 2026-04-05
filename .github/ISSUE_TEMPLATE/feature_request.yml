@@ -1,0 +1,60 @@
+name: Feature Request
+description: Suggest a new feature or improvement
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have an idea for Spry? We'd love to hear it!
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What problem does this solve? What's missing?
+      placeholder: When building a feature with Spry, I need to manually...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: How should Spry handle this?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Any other approaches you've thought about?
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - CLI (init/new/build)
+        - Code generation (templates)
+        - Decorators (@spry-cli/decorators)
+        - Parsing (ts-morph)
+        - State management (Zustand/Jotai)
+        - Query client (React Query/urql)
+        - Testing
+        - Documentation
+        - Claude Code skill
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Is this a Phase 1 (MVP) or future feature?
+      options:
+        - Phase 1 (MVP) — REST + fetch/axios + React Query + Zustand
+        - Phase 2 — Jotai, GraphQL + urql
+        - Phase 3 — Test generation, VS Code extension
+        - Not sure

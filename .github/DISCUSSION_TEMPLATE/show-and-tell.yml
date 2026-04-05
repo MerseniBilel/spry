@@ -1,0 +1,28 @@
+title: "[Show]: "
+labels:
+  - show-and-tell
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Built something with Spry? Share it here!
+
+  - type: textarea
+    id: project
+    attributes:
+      label: What did you build?
+      description: Tell us about your project
+    validations:
+      required: true
+
+  - type: textarea
+    id: experience
+    attributes:
+      label: How was the experience?
+      description: What worked well? What could be improved?
+
+  - type: input
+    id: link
+    attributes:
+      label: Link (optional)
+      placeholder: https://github.com/...
