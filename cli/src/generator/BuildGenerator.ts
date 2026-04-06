@@ -201,25 +201,6 @@ export class BuildGenerator {
       result.created.push(`domain/usecases/${method.Name}UseCase.ts`)
     }
 
-    // Collect new type imports from new methods
-    const newTypeNames = new Set<string>()
-    const primitives = new Set([
-      'string', 'number', 'boolean', 'void', 'undefined', 'null',
-    ])
-    for (const method of newMethods) {
-      const baseReturn = method.isArray
-        ? method.returnType.replace('[]', '')
-        : method.returnType
-      if (!method.isVoid && !primitives.has(baseReturn)) {
-        newTypeNames.add(baseReturn)
-      }
-      for (const param of method.params) {
-        if (param.isBody && !primitives.has(param.type)) {
-          newTypeNames.add(param.type)
-        }
-      }
-    }
-
     // Inject into RepositoryImpl, DataSource, queries, di.ts via ts-morph
     const project = new Project({
       manipulationSettings: { indentationText: IndentationText.TwoSpaces },
