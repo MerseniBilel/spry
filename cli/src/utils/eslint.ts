@@ -13,7 +13,7 @@ export async function patchEslintConfig(
 
   if (content.includes(SPRY_IGNORE)) return true
 
-  // Add spry ignore + disable import/namespace for feature files + typescript resolver for path aliases
+  // Add spry ignore + typescript resolver for path aliases
   const patched = content.replace(
     /ignores:\s*\[([^\]]*)\]/,
     (match, existing: string) => {
