@@ -19,7 +19,6 @@ export async function patchTsConfig(
 
   config.compilerOptions ??= {}
   config.compilerOptions.experimentalDecorators = true
-  config.compilerOptions.emitDecoratorMetadata = true
   const existingPaths = (config.compilerOptions.paths ?? {}) as Record<string, string[]>
   config.compilerOptions.paths = {
     ...existingPaths,

@@ -5,11 +5,11 @@ import { GET, Param, Query, BaseURL, Paginated } from '@spry-cli/decorators'
 export abstract class ProfileRepository {
 
   @GET('/profile/:userId')
-  abstract getProfile(@Param('userId') userId: string): Promise<UserProfile>
+  getProfile(@Param('userId') userId: string): Promise<UserProfile> { throw new Error('contract') }
 
   @GET('/profiles')
   @Paginated()
-  abstract getProfiles(@Query('page') page: number): Promise<PaginatedResult>
+  getProfiles(@Query('page') page: number): Promise<PaginatedResult> { throw new Error('contract') }
 }
 
 interface UserProfile {

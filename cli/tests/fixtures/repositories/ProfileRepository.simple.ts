@@ -6,13 +6,13 @@ export abstract class ProfileRepository {
 
   @GET('/profile/:userId')
   @Cache(60)
-  abstract getProfile(@Param('userId') userId: string): Promise<UserProfile>
+  getProfile(@Param('userId') userId: string): Promise<UserProfile> { throw new Error('contract') }
 
   @PATCH('/profile/:userId')
-  abstract updateProfile(
+  updateProfile(
     @Param('userId') userId: string,
     @Body() input: UpdateProfileInput
-  ): Promise<UserProfile>
+  ): Promise<UserProfile> { throw new Error('contract') }
 }
 
 interface UserProfile {

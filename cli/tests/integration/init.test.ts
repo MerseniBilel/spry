@@ -86,7 +86,6 @@ describe('spry init (integration)', () => {
     )
     const tsConfig = JSON.parse(tsRaw)
     expect(tsConfig.compilerOptions.experimentalDecorators).toBe(true)
-    expect(tsConfig.compilerOptions.emitDecoratorMetadata).toBe(true)
     expect(tsConfig.compilerOptions.strict).toBe(true)
 
     // 6. Generate scaffold

@@ -1,13 +1,10 @@
-import { {{FeatureName}}Repository } from '@features/{{{featureNameKebab}}}/domain/repositories/{{FeatureName}}Repository'
 {{#typeImports}}
 import type { {{name}} } from '@features/{{{featureNameKebab}}}/domain/models/{{name}}'
 {{/typeImports}}
 import { {{FeatureName}}RemoteDataSource } from '../datasources/{{FeatureName}}RemoteDataSource'
 
-export class {{FeatureName}}RepositoryImpl extends {{FeatureName}}Repository {
-  constructor(private dataSource: {{FeatureName}}RemoteDataSource) {
-    super()
-  }
+export class {{FeatureName}}RepositoryImpl {
+  constructor(private dataSource: {{FeatureName}}RemoteDataSource) {}
 {{#queries}}
 
   async {{name}}({{#params}}{{name}}: {{type}}{{#hasNext}}, {{/hasNext}}{{/params}}): Promise<{{returnType}}> {

@@ -6,19 +6,19 @@ export abstract class ProfileRepository {
 
   @GET('/profile/:userId')
   @Cache(60)
-  abstract getProfile(@Param('userId') userId: string): Promise<UserProfile>
+  getProfile(@Param('userId') userId: string): Promise<UserProfile> { throw new Error('contract') }
 
   @POST('/profile')
-  abstract createProfile(@Body() input: CreateProfileInput): Promise<UserProfile>
+  createProfile(@Body() input: CreateProfileInput): Promise<UserProfile> { throw new Error('contract') }
 
   @PATCH('/profile/:userId')
-  abstract updateProfile(
+  updateProfile(
     @Param('userId') userId: string,
     @Body() input: UpdateProfileInput
-  ): Promise<UserProfile>
+  ): Promise<UserProfile> { throw new Error('contract') }
 
   @DELETE('/profile/:userId')
-  abstract deleteProfile(@Param('userId') userId: string): Promise<void>
+  deleteProfile(@Param('userId') userId: string): Promise<void> { throw new Error('contract') }
 }
 
 interface UserProfile {

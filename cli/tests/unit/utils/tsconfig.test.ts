@@ -30,7 +30,6 @@ describe('patchTsConfig', () => {
     )
     const config = JSON.parse(raw)
     expect(config.compilerOptions.experimentalDecorators).toBe(true)
-    expect(config.compilerOptions.emitDecoratorMetadata).toBe(true)
     expect(config.compilerOptions.strict).toBe(true)
     expect(config.compilerOptions.paths['@features/*']).toEqual([
       './src/features/*',

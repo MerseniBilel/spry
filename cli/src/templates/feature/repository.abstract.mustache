@@ -1,4 +1,16 @@
-// @ts-nocheck — Spry contract file, parsed by ts-morph at build time
+// ─── Spry Contract ───────────────────────────────────────────────────
+// This file is a BUILD-TIME ONLY contract. Spry CLI reads the
+// decorators below via ts-morph to generate your data layer, use cases,
+// hooks, and DI wiring.
+//
+// DO NOT import this file from any runtime code. Metro's hermes-parser
+// does not support decorator syntax (@), so bundling this file will
+// crash the app. See: https://github.com/facebook/hermes/issues/1549
+//
+// Usage:
+//   1. Add methods with @spry-cli/decorators (@GET, @POST, etc.)
+//   2. Run: spry build {{featureName}}
+// ─────────────────────────────────────────────────────────────────────
 import { BaseURL } from '@spry-cli/decorators'
 
 @BaseURL('/api/v1/{{featureName}}')

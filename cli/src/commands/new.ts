@@ -72,13 +72,13 @@ export const newCommand = new Command('new')
       ``,
       `  @GET('/${featureName}/:id')`,
       `  @Cache(60)`,
-      `  abstract get${pascal}(@Param('id') id: string): Promise<${pascal}>`,
+      `  get${pascal}(@Param('id') id: string): Promise<${pascal}> { throw new Error('contract') }`,
       ``,
       `  @PATCH('/${featureName}/:id')`,
-      `  abstract update${pascal}(`,
+      `  update${pascal}(`,
       `    @Param('id') id: string,`,
       `    @Body() input: Update${pascal}Input`,
-      `  ): Promise<${pascal}>`,
+      `  ): Promise<${pascal}> { throw new Error('contract') }`,
       `}`,
     ].join('\n')
 

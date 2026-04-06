@@ -11,8 +11,6 @@ export class MethodParser {
     const methods: ParsedMethod[] = []
 
     for (const method of classDecl.getMethods()) {
-      if (!method.isAbstract()) continue
-
       const decorators = this.decoratorReader.readMethodDecorators(method)
       if (!decorators) continue
 

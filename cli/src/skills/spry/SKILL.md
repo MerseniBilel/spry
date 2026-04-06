@@ -47,7 +47,6 @@ export interface EntityName {
 Update `src/features/$ARGUMENTS/domain/repositories/` with the abstract class. Use decorators:
 
 ```ts
-// @ts-nocheck — Spry contract file, parsed by ts-morph at build time
 import { GET, POST, PUT, DELETE, Param, Query, Body, BaseURL, Cache } from '@spry-cli/decorators'
 import type { EntityName } from '../models/EntityName'
 
@@ -55,13 +54,13 @@ import type { EntityName } from '../models/EntityName'
 export abstract class FeatureRepository {
   @GET('/')
   @Cache(60)
-  abstract getAll(): Promise<EntityName[]>
+  getAll(): Promise<EntityName[]> { throw new Error('contract') }
 
   @GET('/:id')
-  abstract getById(@Param('id') id: number): Promise<EntityName>
+  getById(@Param('id') id: number): Promise<EntityName> { throw new Error('contract') }
 
   @POST('/')
-  abstract create(@Body() input: CreateInput): Promise<EntityName>
+  create(@Body() input: CreateInput): Promise<EntityName> { throw new Error('contract') }
 }
 ```
 
