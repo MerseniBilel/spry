@@ -1,7 +1,7 @@
-import { {{{reactQueryImports}}} } from '@tanstack/react-query'
+import { {{{reactQueryImports}}}{{#hasMutations}}, useQueryClient{{/hasMutations}} } from '@tanstack/react-query'
 import type { DomainError } from '@shared/errors'
 {{#typeImports}}
-import type { {{name}} } from '@features/{{{featureNameKebab}}}/domain/models/{{name}}'
+import type { {{{names}}} } from '{{{path}}}'
 {{/typeImports}}
 import { {{#allMethods}}{{camelName}}UseCase{{#hasNext}}, {{/hasNext}}{{/allMethods}} } from '@features/{{{featureNameKebab}}}/di'
 {{#queries}}
@@ -18,23 +18,24 @@ export function use{{Name}}({{#params}}{{name}}: {{type}}{{#hasNext}}, {{/hasNex
 {{/queries}}
 {{#paginatedQueries}}
 
-export function use{{Name}}({{#params}}{{name}}: {{type}}{{#hasNext}}, {{/hasNext}}{{/params}}) {
-  return useInfiniteQuery<{{returnType}}, DomainError>({
-    queryKey: ['{{featureName}}', '{{name}}'{{#params}}, {{name}}{{/params}}],
-    queryFn: ({ pageParam }) => {{camelName}}UseCase.execute(pageParam as number),
+export function use{{Name}}({{#paginationParams}}{{name}}: {{type}}{{#hasNext}}, {{/hasNext}}{{/paginationParams}}) {
+  return useInfiniteQuery({
+    queryKey: ['{{featureName}}', '{{name}}'{{#paginationParams}}, {{name}}{{/paginationParams}}],
+    queryFn: ({ pageParam }) => {{camelName}}UseCase.execute(pageParam{{#paginationParams}}, {{name}}{{/paginationParams}}),
     initialPageParam: 1,
-    getNextPageParam: () => undefined, // TODO: implement pagination logic
+    getNextPageParam: (lastPage) => undefined, // TODO: return next page or undefined to stop
   })
 }
 {{/paginatedQueries}}
 {{#mutations}}
 
 export function use{{Name}}() {
+  const queryClient = useQueryClient()
   return useMutation<{{returnType}}, DomainError, { {{#params}}{{name}}: {{type}}{{#hasNext}}; {{/hasNext}}{{/params}} }>({
     mutationFn: ({ {{#params}}{{name}}{{#hasNext}}, {{/hasNext}}{{/params}} }) =>
       {{camelName}}UseCase.execute({{#params}}{{name}}{{#hasNext}}, {{/hasNext}}{{/params}}),
     onSuccess: () => {
-      // TODO: invalidate relevant queries
+      queryClient.invalidateQueries({ queryKey: ['{{featureName}}'] })
     },
   })
 }

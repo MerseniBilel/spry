@@ -5,6 +5,18 @@ declare const __DEV__: boolean
 
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? ''
 
+function extractErrorMessage(raw: string): string {
+  try {
+    const parsed = JSON.parse(raw)
+    if (typeof parsed === 'string') return parsed
+    if (typeof parsed.message === 'string') return parsed.message
+    if (typeof parsed.error === 'string') return parsed.error
+    return raw
+  } catch {
+    return raw
+  }
+}
+
 interface RequestConfig {
   method: string
   path: string
@@ -40,21 +52,22 @@ if (__DEV__) {
   })
 }
 
-// Uncomment to attach an auth token:
-// requestInterceptors.push((config) => {
-//   const token = getToken()
-//   if (token) {
-//     config.headers = { ...config.headers, Authorization: `Bearer ${token}` }
-//   }
-//   return config
-// })
+// ─── Auth ────────────────────────────────────────────────────────────
+let authToken: string | null = null
 
-// Uncomment to handle token refresh on 401:
-// responseInterceptors.push((response, config, durationMs) => {
-//   if (response.status === 401) {
-//     // refresh token logic
-//   }
-// })
+export function setAuthToken(token: string | null) {
+  authToken = token
+}
+
+requestInterceptors.push((config) => {
+  if (authToken) {
+    config.headers = {
+      ...config.headers,
+      Authorization: `Bearer ${authToken}`,
+    }
+  }
+  return config
+})
 
 // ─── Request Helper ──────────────────────────────────────────────────
 async function request<T>(initialConfig: RequestConfig): Promise<T> {
@@ -85,12 +98,13 @@ async function request<T>(initialConfig: RequestConfig): Promise<T> {
   }
 
   if (!response.ok) {
-    const errorBody = await response.text().catch(() => 'Unknown error')
+    const rawBody = await response.text().catch(() => 'Unknown error')
+    const errorMessage = extractErrorMessage(rawBody)
     const durationMs = Date.now() - startTime
     for (const interceptor of responseInterceptors) {
-      interceptor({ status: response.status, ok: false, errorBody }, config, durationMs)
+      interceptor({ status: response.status, ok: false, errorBody: errorMessage }, config, durationMs)
     }
-    throw new HttpError(response.status, errorBody)
+    throw new HttpError(response.status, errorMessage)
   }
 
   const durationMs = Date.now() - startTime

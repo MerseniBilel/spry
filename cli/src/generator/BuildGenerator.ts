@@ -41,27 +41,6 @@ export class BuildGenerator {
       context.featureNameKebab
     )
 
-    // Model files — one per type (developer-owned, generated once)
-    for (const typeImport of context.typeImports) {
-      const modelPath = join(
-        featureDir,
-        'domain',
-        'models',
-        `${typeImport.name}.ts`
-      )
-      if (await fileExists(modelPath)) {
-        result.skipped.push(
-          `domain/models/${typeImport.name}.ts (developer-owned)`
-        )
-      } else {
-        await writeFileWithDir(
-          modelPath,
-          `export interface ${typeImport.name} {\n  // TODO: define ${typeImport.name} fields\n}\n`
-        )
-        result.created.push(`domain/models/${typeImport.name}.ts`)
-      }
-    }
-
     // Use cases — one file per method
     for (const method of context.allMethods) {
       const methodContext = { ...context, ...method }
@@ -255,12 +234,10 @@ export class BuildGenerator {
     )
     if (await fileExists(repoImplPath)) {
       const sf = project.addSourceFileAtPath(repoImplPath)
-      for (const typeName of newTypeNames) {
-        this.importInjector.inject(
-          sf,
-          `@features/${context.featureNameKebab}/domain/models/${typeName}`,
-          [typeName]
-        )
+      for (const method of newMethods) {
+        for (const imp of method.methodTypeImports) {
+          this.importInjector.inject(sf, imp.path, imp.names.split(', '))
+        }
       }
       const cls = sf.getClasses()[0]
       if (cls) {
@@ -297,12 +274,10 @@ export class BuildGenerator {
     )
     if (await fileExists(dsPath)) {
       const sf = project.addSourceFileAtPath(dsPath)
-      for (const typeName of newTypeNames) {
-        this.importInjector.inject(
-          sf,
-          `@features/${context.featureNameKebab}/domain/models/${typeName}`,
-          [typeName]
-        )
+      for (const method of newMethods) {
+        for (const imp of method.methodTypeImports) {
+          this.importInjector.inject(sf, imp.path, imp.names.split(', '))
+        }
       }
       const cls = sf.getClasses()[0]
       if (cls) {
@@ -387,4 +362,5 @@ export class BuildGenerator {
     const content = Mustache.render(template, context).trimEnd() + '\n'
     await writeFileWithDir(outputPath, content)
   }
+
 }

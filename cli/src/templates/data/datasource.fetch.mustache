@@ -1,6 +1,6 @@
 import { httpClient } from '@shared/http/httpClient'
 {{#typeImports}}
-import type { {{name}} } from '@features/{{{featureNameKebab}}}/domain/models/{{name}}'
+import type { {{{names}}} } from '{{{path}}}'
 {{/typeImports}}
 
 export class {{FeatureName}}RemoteDataSource {

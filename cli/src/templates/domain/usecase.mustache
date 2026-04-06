@@ -1,6 +1,6 @@
 import type { {{FeatureName}}Repository } from '@features/{{{featureNameKebab}}}/domain/repositories/{{FeatureName}}Repository'
 {{#methodTypeImports}}
-import type { {{name}} } from '@features/{{{featureNameKebab}}}/domain/models/{{name}}'
+import type { {{{names}}} } from '{{{path}}}'
 {{/methodTypeImports}}
 
 export class {{Name}}UseCase {

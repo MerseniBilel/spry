@@ -20,7 +20,7 @@ describe('NormalizationMapper', () => {
   it('splits methods into queries and mutations', () => {
     const cls = loadClass('ProfileRepository.simple.ts')
     const methods = methodParser.parse(cls)
-    const ctx = mapper.normalize('profile', '/api/v1', methods)
+    const ctx = mapper.normalize({ featureName: 'profile', baseUrl: '/api/v1', methods })
 
     expect(ctx.queries).toHaveLength(1)
     expect(ctx.mutations).toHaveLength(1)
@@ -32,7 +32,7 @@ describe('NormalizationMapper', () => {
   it('splits paginated queries correctly', () => {
     const cls = loadClass('ProfileRepository.paginated.ts')
     const methods = methodParser.parse(cls)
-    const ctx = mapper.normalize('profile', '/api/v1', methods)
+    const ctx = mapper.normalize({ featureName: 'profile', baseUrl: '/api/v1', methods })
 
     expect(ctx.queries).toHaveLength(1)
     expect(ctx.paginatedQueries).toHaveLength(1)
@@ -42,7 +42,7 @@ describe('NormalizationMapper', () => {
   it('computes fullPath from baseUrl + path', () => {
     const cls = loadClass('ProfileRepository.simple.ts')
     const methods = methodParser.parse(cls)
-    const ctx = mapper.normalize('profile', '/api/v1', methods)
+    const ctx = mapper.normalize({ featureName: 'profile', baseUrl: '/api/v1', methods })
 
     expect(ctx.queries[0].fullPath).toBe('/api/v1/profile/:userId')
   })
@@ -50,7 +50,7 @@ describe('NormalizationMapper', () => {
   it('sets feature name variants', () => {
     const cls = loadClass('ProfileRepository.simple.ts')
     const methods = methodParser.parse(cls)
-    const ctx = mapper.normalize('user-profile', '/api', methods)
+    const ctx = mapper.normalize({ featureName: 'user-profile', baseUrl: '/api', methods })
 
     expect(ctx.featureName).toBe('userProfile')
     expect(ctx.FeatureName).toBe('UserProfile')
@@ -60,7 +60,7 @@ describe('NormalizationMapper', () => {
   it('derives entityName from first query return type', () => {
     const cls = loadClass('ProfileRepository.simple.ts')
     const methods = methodParser.parse(cls)
-    const ctx = mapper.normalize('profile', '/api/v1', methods)
+    const ctx = mapper.normalize({ featureName: 'profile', baseUrl: '/api/v1', methods })
 
     expect(ctx.entityName).toBe('UserProfile')
   })
@@ -68,7 +68,7 @@ describe('NormalizationMapper', () => {
   it('sets hasBody and bodyType for mutations', () => {
     const cls = loadClass('ProfileRepository.simple.ts')
     const methods = methodParser.parse(cls)
-    const ctx = mapper.normalize('profile', '/api/v1', methods)
+    const ctx = mapper.normalize({ featureName: 'profile', baseUrl: '/api/v1', methods })
 
     expect(ctx.mutations[0].hasBody).toBe(true)
     expect(ctx.mutations[0].bodyParamName).toBe('input')
@@ -77,7 +77,7 @@ describe('NormalizationMapper', () => {
   it('computes PascalCase method names', () => {
     const cls = loadClass('ProfileRepository.simple.ts')
     const methods = methodParser.parse(cls)
-    const ctx = mapper.normalize('profile', '/api/v1', methods)
+    const ctx = mapper.normalize({ featureName: 'profile', baseUrl: '/api/v1', methods })
 
     expect(ctx.queries[0].Name).toBe('GetProfile')
     expect(ctx.mutations[0].Name).toBe('UpdateProfile')
@@ -86,7 +86,7 @@ describe('NormalizationMapper', () => {
   it('sets hasNext for comma separation', () => {
     const cls = loadClass('ProfileRepository.complex.ts')
     const methods = methodParser.parse(cls)
-    const ctx = mapper.normalize('profile', '/api/v1', methods)
+    const ctx = mapper.normalize({ featureName: 'profile', baseUrl: '/api/v1', methods })
 
     // allMethods has 4 items, last should have hasNext=false
     expect(ctx.allMethods[0].hasNext).toBe(true)
@@ -98,7 +98,7 @@ describe('NormalizationMapper', () => {
   it('sets boolean helpers', () => {
     const cls = loadClass('ProfileRepository.complex.ts')
     const methods = methodParser.parse(cls)
-    const ctx = mapper.normalize('profile', '/api/v1', methods)
+    const ctx = mapper.normalize({ featureName: 'profile', baseUrl: '/api/v1', methods })
 
     expect(ctx.hasQueries).toBe(true)
     expect(ctx.hasMutations).toBe(true)

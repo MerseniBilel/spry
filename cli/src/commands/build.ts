@@ -13,6 +13,7 @@ import { RepositoryParser } from '../parser/RepositoryParser.js'
 import { DecoratorReader } from '../parser/DecoratorReader.js'
 import { MethodParser } from '../parser/MethodParser.js'
 import { NormalizationMapper } from '../parser/NormalizationMapper.js'
+import { TypeSourceMapper } from '../parser/TypeSourceMapper.js'
 import { BuildGenerator } from '../generator/BuildGenerator.js'
 import { validateFeatureName } from '../prompts/newPrompts.js'
 import type { SpryConfig } from '../types/config.js'
@@ -127,7 +128,7 @@ async function buildFeature(opts: {
   spin.start(`Parsing ${pascal}Repository...`)
 
   const repoParser = new RepositoryParser()
-  const { classDecl } = repoParser.parse(repoPath)
+  const { classDecl, sourceFile } = repoParser.parse(repoPath)
 
   const decoratorReader = new DecoratorReader()
   const baseUrl = decoratorReader.readBaseUrl(classDecl) ?? ''
@@ -143,8 +144,13 @@ async function buildFeature(opts: {
     return
   }
 
+  const typeSourceMapper = new TypeSourceMapper()
+  const typeSourceMap = typeSourceMapper.build(sourceFile, featureName)
+
   const mapper = new NormalizationMapper()
-  const context = mapper.normalize(featureName, baseUrl, parsedMethods)
+  const context = mapper.normalize({
+    featureName, baseUrl, methods: parsedMethods, typeSourceMap,
+  })
   const count = parsedMethods.length
   spin.stop(`Parsed ${count} method${count > 1 ? 's' : ''}`)
 

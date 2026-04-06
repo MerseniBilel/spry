@@ -52,7 +52,7 @@ export interface NormalizedMethod {
   isArray: boolean
   isVoid: boolean
   cacheSeconds: number | null
-  methodTypeImports: { name: string; hasNext: boolean }[]
+  methodTypeImports: { path: string; names: string; hasNext: boolean }[]
   hasMethodTypeImports: boolean
   methodTypeImportsList: string
   params: NormalizedParam[]
@@ -61,6 +61,8 @@ export interface NormalizedMethod {
   hasBody: boolean
   bodyType: string | null
   bodyParamName: string | null
+  paginationParams: NormalizedParam[]
+  hasPaginationParams: boolean
   hasNext: boolean
 }
 
@@ -78,7 +80,7 @@ export interface NormalizedContext {
   hasPaginatedQueries: boolean
   hasMutations: boolean
   reactQueryImports: string
-  typeImports: { name: string; hasNext: boolean }[]
+  typeImports: { path: string; names: string; hasNext: boolean }[]
   hasTypeImports: boolean
   typeImportsList: string
 }

@@ -7,17 +7,19 @@ import type {
 } from '../types/parser.js'
 
 export class NormalizationMapper {
-  normalize(
-    featureName: string,
-    baseUrl: string,
+  normalize(opts: {
+    featureName: string
+    baseUrl: string
     methods: ParsedMethod[]
-  ): NormalizedContext {
+    typeSourceMap?: Map<string, string>
+  }): NormalizedContext {
+    const { featureName, baseUrl, methods, typeSourceMap } = opts
     const queries: NormalizedMethod[] = []
     const paginatedQueries: NormalizedMethod[] = []
     const mutations: NormalizedMethod[] = []
 
     for (const method of methods) {
-      const normalized = this.normalizeMethod(method, baseUrl)
+      const normalized = this.normalizeMethod({ method, baseUrl, featureName, typeSourceMap })
 
       if (method.decorators.isPaginated) {
         paginatedQueries.push(normalized)
@@ -51,14 +53,17 @@ export class NormalizationMapper {
       hasPaginatedQueries: paginatedQueries.length > 0,
       hasMutations: mutations.length > 0,
       reactQueryImports: this.buildReactQueryImports(queries, paginatedQueries, mutations),
-      ...this.collectTypeImports(allMethods),
+      ...this.collectTypeImports(allMethods, featureName, typeSourceMap),
     }
   }
 
-  private normalizeMethod(
-    method: ParsedMethod,
+  private normalizeMethod(opts: {
+    method: ParsedMethod
     baseUrl: string
-  ): NormalizedMethod {
+    featureName: string
+    typeSourceMap?: Map<string, string>
+  }): NormalizedMethod {
+    const { method, baseUrl, featureName, typeSourceMap } = opts
     const params = this.normalizeParams(method.params)
     const bodyParam = params.find((p) => p.isBody)
     const rawBodyParam = method.params.find((p) => p.decorator === 'Body')
@@ -77,13 +82,15 @@ export class NormalizationMapper {
       isArray: method.returnType.isArray,
       isVoid: method.returnType.isVoid,
       cacheSeconds: method.decorators.cacheSeconds,
-      ...this.collectMethodTypeImports(method, params),
+      ...this.collectMethodTypeImports({ method, params, featureName, typeSourceMap }),
       params,
       hasParams: params.length > 0,
       hasQueryParams: params.some((p) => p.isQueryParam),
       hasBody: !!bodyParam,
       bodyType: rawBodyParam?.type ?? null,
       bodyParamName: bodyParam?.name ?? null,
+      paginationParams: this.buildPaginationParams(params),
+      hasPaginationParams: this.buildPaginationParams(params).length > 0,
       hasNext: false,
     }
   }
@@ -110,40 +117,33 @@ export class NormalizationMapper {
     }
   }
 
-  private collectMethodTypeImports(
-    method: ParsedMethod,
+  private collectMethodTypeImports(opts: {
+    method: ParsedMethod
     params: NormalizedParam[]
-  ) {
-    const primitives = new Set([
-      'string', 'number', 'boolean', 'void', 'undefined', 'null', 'any', 'unknown',
-    ])
-    const types = new Set<string>()
-
-    if (!method.returnType.isVoid && !primitives.has(method.returnType.baseTypeName)) {
-      types.add(method.returnType.baseTypeName)
-    }
-    for (const param of params) {
-      if (!primitives.has(param.type) && param.isBody) {
-        types.add(param.type)
-      }
-    }
-
-    const sorted = [...types].sort()
-    const methodTypeImports = sorted.map((name, i) => ({
-      name,
-      hasNext: i < sorted.length - 1,
-    }))
+    featureName: string
+    typeSourceMap?: Map<string, string>
+  }) {
+    const { method, params, featureName, typeSourceMap } = opts
+    const types = this.extractTypeNames(method, params)
+    const grouped = this.groupBySourcePath(
+      types, featureName, typeSourceMap
+    )
 
     return {
-      methodTypeImports,
-      hasMethodTypeImports: methodTypeImports.length > 0,
-      methodTypeImportsList: sorted.join(', '),
+      methodTypeImports: grouped,
+      hasMethodTypeImports: grouped.length > 0,
+      methodTypeImportsList: types.join(', '),
     }
   }
 
-  private collectTypeImports(methods: NormalizedMethod[]) {
+  private collectTypeImports(
+    methods: NormalizedMethod[],
+    featureName: string,
+    typeSourceMap?: Map<string, string>
+  ) {
     const primitives = new Set([
-      'string', 'number', 'boolean', 'void', 'undefined', 'null', 'any', 'unknown',
+      'string', 'number', 'boolean', 'void',
+      'undefined', 'null', 'any', 'unknown',
     ])
     const types = new Set<string>()
 
@@ -162,16 +162,65 @@ export class NormalizationMapper {
     }
 
     const sorted = [...types].sort()
-    const typeImports = sorted.map((name, i) => ({
-      name,
-      hasNext: i < sorted.length - 1,
-    }))
+    const grouped = this.groupBySourcePath(
+      sorted, featureName, typeSourceMap
+    )
 
     return {
-      typeImports,
-      hasTypeImports: typeImports.length > 0,
+      typeImports: grouped,
+      hasTypeImports: grouped.length > 0,
       typeImportsList: sorted.join(', '),
     }
+  }
+
+  private extractTypeNames(
+    method: ParsedMethod,
+    params: NormalizedParam[]
+  ): string[] {
+    const primitives = new Set([
+      'string', 'number', 'boolean', 'void',
+      'undefined', 'null', 'any', 'unknown',
+    ])
+    const types = new Set<string>()
+
+    if (
+      !method.returnType.isVoid &&
+      !primitives.has(method.returnType.baseTypeName)
+    ) {
+      types.add(method.returnType.baseTypeName)
+    }
+    for (const param of params) {
+      if (!primitives.has(param.type) && param.isBody) {
+        types.add(param.type)
+      }
+    }
+    return [...types].sort()
+  }
+
+  private groupBySourcePath(
+    typeNames: string[],
+    featureName: string,
+    typeSourceMap?: Map<string, string>
+  ) {
+    const kebab = kebabCase(featureName)
+    const byPath = new Map<string, string[]>()
+
+    for (const name of typeNames) {
+      const sourcePath = typeSourceMap?.get(name)
+        ?? `@features/${kebab}/domain/models/${name}`
+      const existing = byPath.get(sourcePath) ?? []
+      existing.push(name)
+      byPath.set(sourcePath, existing)
+    }
+
+    const entries = [...byPath.entries()].sort(([a], [b]) =>
+      a.localeCompare(b)
+    )
+    return entries.map(([path, names], i) => ({
+      path,
+      names: names.join(', '),
+      hasNext: i < entries.length - 1,
+    }))
   }
 
   private buildReactQueryImports(
@@ -184,6 +233,16 @@ export class NormalizationMapper {
     if (mutations.length > 0) imports.push('useMutation')
     if (paginatedQueries.length > 0) imports.push('useInfiniteQuery')
     return imports.join(', ')
+  }
+
+  private buildPaginationParams(
+    params: NormalizedParam[]
+  ): NormalizedParam[] {
+    const queryParams = params.filter((p) => p.isQueryParam)
+    // First @Query param is the page param (handled by pageParam)
+    const extra = queryParams.slice(1)
+    this.setHasNext(extra)
+    return extra
   }
 
   private interpolatePath(path: string, params: NormalizedParam[]): string {

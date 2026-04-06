@@ -81,7 +81,7 @@ function parseAndNormalize(repoPath: string, featureName: string) {
   const methodParser = new MethodParser()
   const methods = methodParser.parse(classDecl)
   const mapper = new NormalizationMapper()
-  return mapper.normalize(featureName, baseUrl, methods)
+  return mapper.normalize({ featureName, baseUrl, methods })
 }
 
 describe('spry build (integration)', () => {
