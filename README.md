@@ -33,22 +33,23 @@ Spry reads a typed contract you write — an abstract repository class decorated
 
 ```ts
 import { GET, PATCH, DELETE, Param, Body, BaseURL, Cache } from '@spry-cli/decorators'
+import type { UserProfile, UpdateProfileInput } from '../models/UserProfile'
 
 @BaseURL('/api/v1')
 export abstract class ProfileRepository {
 
   @GET('/profile/:userId')
   @Cache(60)
-  abstract getProfile(@Param('userId') userId: string): Promise<UserProfile>
+  getProfile(@Param('userId') userId: string): Promise<UserProfile> { throw new Error('contract') }
 
   @PATCH('/profile/:userId')
-  abstract updateProfile(
+  updateProfile(
     @Param('userId') userId: string,
     @Body() input: UpdateProfileInput
-  ): Promise<UserProfile>
+  ): Promise<UserProfile> { throw new Error('contract') }
 
   @DELETE('/profile/:userId')
-  abstract deleteProfile(@Param('userId') userId: string): Promise<void>
+  deleteProfile(@Param('userId') userId: string): Promise<void> { throw new Error('contract') }
 }
 ```
 
@@ -194,10 +195,10 @@ This teaches the AI assistant how to use Spry — create features, write contrac
 ## Roadmap
 
 - [x] REST + fetch/axios + React Query + Zustand
+- [x] `spry doctor` command
+- [ ] `spry doctor --fix` (auto-repair project issues)
 - [ ] Jotai support
 - [ ] GraphQL + urql + codegen
-- [ ] `spry doctor` command
-- [ ] Ejectable templates
 - [ ] Test generation (Vitest for use cases)
 - [ ] Maestro E2E scaffold
 - [ ] VS Code extension
