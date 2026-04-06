@@ -2,13 +2,71 @@ import axios, { AxiosError, type AxiosRequestConfig } from 'axios'
 import { HttpError } from '../errors/HttpError'
 import { NetworkError } from '../errors/NetworkError'
 
+declare const __DEV__: boolean
+
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? ''
+
+const requestTimings = new Map<string, number>()
 
 const instance = axios.create({
   baseURL: BASE_URL,
   headers: { 'Content-Type': 'application/json' },
 })
 
+// ─── Request Interceptors ────────────────────────────────────────────
+instance.interceptors.request.use((config) => {
+  if (__DEV__) {
+    const method = config.method?.toUpperCase() ?? '?'
+    const url = `${config.baseURL ?? ''}${config.url ?? ''}`
+    const requestId = `${method}:${url}:${Date.now()}`
+    config.headers.set('X-Request-Id', requestId)
+    requestTimings.set(requestId, Date.now())
+    console.log(`→ ${method} ${url}`)
+    if (config.data) console.log('  Body:', JSON.stringify(config.data))
+  }
+
+  // Uncomment to attach an auth token:
+  // const token = getToken()
+  // if (token) {
+  //   config.headers.Authorization = `Bearer ${token}`
+  // }
+
+  return config
+})
+
+// ─── Response Interceptors ───────────────────────────────────────────
+instance.interceptors.response.use(
+  (response) => {
+    if (__DEV__) {
+      const requestId = response.config.headers.get('X-Request-Id') as string | undefined
+      const start = requestId ? requestTimings.get(requestId) : undefined
+      const duration = start ? Date.now() - start : 0
+      if (requestId) requestTimings.delete(requestId)
+      console.log(`← ${response.status} (${duration}ms)`)
+    }
+    return response
+  },
+  (error) => {
+    if (__DEV__ && error instanceof AxiosError) {
+      const requestId = error.config?.headers?.get?.('X-Request-Id') as string | undefined
+      const start = requestId ? requestTimings.get(requestId) : undefined
+      const duration = start ? Date.now() - start : 0
+      if (requestId) requestTimings.delete(requestId)
+      const status = error.response?.status ?? 'NETWORK_ERROR'
+      console.log(`← ${status} (${duration}ms)`)
+      if (error.response?.data) console.log('  Error:', JSON.stringify(error.response.data))
+    }
+
+    // Uncomment to handle token refresh on 401:
+    // if (error.response?.status === 401) {
+    //   // refresh token logic
+    // }
+
+    return Promise.reject(error)
+  }
+)
+
+// ─── Request Helper ──────────────────────────────────────────────────
 async function request<T>(config: AxiosRequestConfig): Promise<T> {
   try {
     const response = await instance(config)

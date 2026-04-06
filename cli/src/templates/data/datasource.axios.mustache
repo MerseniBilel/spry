@@ -7,22 +7,19 @@ export class {{FeatureName}}RemoteDataSource {
 {{#queries}}
 
   async {{name}}({{#params}}{{name}}: {{type}}{{#hasNext}}, {{/hasNext}}{{/params}}): Promise<{{returnType}}> {
-    const { data } = await httpClient.get<{{returnType}}>(`{{{interpolatedPath}}}`)
-    return data
+    return httpClient.get<{{returnType}}>(`{{{interpolatedPath}}}`)
   }
 {{/queries}}
 {{#paginatedQueries}}
 
   async {{name}}({{#params}}{{name}}: {{type}}{{#hasNext}}, {{/hasNext}}{{/params}}): Promise<{{returnType}}> {
-    const { data } = await httpClient.get<{{returnType}}>(`{{{interpolatedPath}}}`)
-    return data
+    return httpClient.get<{{returnType}}>(`{{{interpolatedPath}}}`)
   }
 {{/paginatedQueries}}
 {{#mutations}}
 
   async {{name}}({{#params}}{{name}}: {{type}}{{#hasNext}}, {{/hasNext}}{{/params}}): Promise<{{returnType}}> {
-    const { data } = await httpClient.{{lowerHttpMethod}}<{{returnType}}>(`{{{interpolatedPath}}}`{{#hasBody}}, {{bodyParamName}}{{/hasBody}})
-    return data
+    return httpClient.{{lowerHttpMethod}}<{{returnType}}>(`{{{interpolatedPath}}}`{{#hasBody}}, {{bodyParamName}}{{/hasBody}})
   }
 {{/mutations}}
 }

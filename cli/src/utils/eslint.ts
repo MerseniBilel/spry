@@ -13,7 +13,7 @@ export async function patchEslintConfig(
 
   if (content.includes(SPRY_IGNORE)) return true
 
-  // Add spry ignore + disable import/namespace for feature files
+  // Add spry ignore + disable import/namespace for feature files + typescript resolver for path aliases
   const patched = content.replace(
     /ignores:\s*\[([^\]]*)\]/,
     (match, existing: string) => {
@@ -27,11 +27,11 @@ export async function patchEslintConfig(
 
   let result = patched !== content ? patched : content
 
-  // Add import/namespace override for feature files
+  // Add import/namespace override and typescript resolver for feature files
   if (!result.includes('import/namespace')) {
     result = result.replace(
       /]\s*\)\s*;?\s*$/,
-      `  {\n    files: ['src/features/**/*.ts', 'src/features/**/*.tsx'],\n    rules: {\n      'import/namespace': 'off',\n    },\n  },\n]);`
+      `  {\n    files: ['src/features/**/*.ts', 'src/features/**/*.tsx', 'src/shared/**/*.ts'],\n    rules: {\n      'import/namespace': 'off',\n    },\n    settings: {\n      'import/resolver': {\n        typescript: true,\n      },\n    },\n  },\n]);`
     )
   }
 

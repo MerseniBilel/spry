@@ -1,37 +1,101 @@
 import { HttpError } from '../errors/HttpError'
 import { NetworkError } from '../errors/NetworkError'
 
+declare const __DEV__: boolean
+
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? ''
 
-interface RequestOptions {
+interface RequestConfig {
   method: string
+  path: string
   headers?: Record<string, string>
   body?: string
 }
 
-async function request<T>(
-  path: string,
-  options: RequestOptions
-): Promise<T> {
-  const url = `${BASE_URL}${path}`
+// ─── Interceptors ────────────────────────────────────────────────────
+type RequestInterceptor = (config: RequestConfig) => RequestConfig
+type ResponseInterceptor = (
+  response: { status: number; ok: boolean; errorBody?: string },
+  config: RequestConfig,
+  durationMs: number
+) => void
+
+const requestInterceptors: RequestInterceptor[] = []
+const responseInterceptors: ResponseInterceptor[] = []
+
+// Dev logger
+if (__DEV__) {
+  requestInterceptors.push((config) => {
+    const url = `${BASE_URL}${config.path}`
+    console.log(`→ ${config.method} ${url}`)
+    if (config.body) console.log('  Body:', config.body)
+    return config
+  })
+
+  responseInterceptors.push((response, _config, durationMs) => {
+    console.log(`← ${response.status} (${durationMs}ms)`)
+    if (!response.ok && response.errorBody) {
+      console.log('  Error:', response.errorBody)
+    }
+  })
+}
+
+// Uncomment to attach an auth token:
+// requestInterceptors.push((config) => {
+//   const token = getToken()
+//   if (token) {
+//     config.headers = { ...config.headers, Authorization: `Bearer ${token}` }
+//   }
+//   return config
+// })
+
+// Uncomment to handle token refresh on 401:
+// responseInterceptors.push((response, config, durationMs) => {
+//   if (response.status === 401) {
+//     // refresh token logic
+//   }
+// })
+
+// ─── Request Helper ──────────────────────────────────────────────────
+async function request<T>(initialConfig: RequestConfig): Promise<T> {
+  let config = initialConfig
+  for (const interceptor of requestInterceptors) {
+    config = interceptor(config)
+  }
+
+  const url = `${BASE_URL}${config.path}`
+  const startTime = Date.now()
   let response: Response
 
   try {
     response = await fetch(url, {
-      method: options.method,
+      method: config.method,
       headers: {
         'Content-Type': 'application/json',
-        ...options.headers,
+        ...config.headers,
       },
-      body: options.body,
+      body: config.body,
     })
   } catch {
+    const durationMs = Date.now() - startTime
+    for (const interceptor of responseInterceptors) {
+      interceptor({ status: 0, ok: false }, config, durationMs)
+    }
     throw new NetworkError()
   }
 
   if (!response.ok) {
-    const message = await response.text().catch(() => 'Unknown error')
-    throw new HttpError(response.status, message)
+    const errorBody = await response.text().catch(() => 'Unknown error')
+    const durationMs = Date.now() - startTime
+    for (const interceptor of responseInterceptors) {
+      interceptor({ status: response.status, ok: false, errorBody }, config, durationMs)
+    }
+    throw new HttpError(response.status, errorBody)
+  }
+
+  const durationMs = Date.now() - startTime
+  for (const interceptor of responseInterceptors) {
+    interceptor({ status: response.status, ok: true }, config, durationMs)
   }
 
   return response.json() as Promise<T>
@@ -39,7 +103,7 @@ async function request<T>(
 
 export const httpClient = {
   get<T>(path: string, headers?: Record<string, string>) {
-    return request<T>(path, { method: 'GET', headers })
+    return request<T>({ method: 'GET', path, headers })
   },
 
   post<T>(
@@ -47,8 +111,9 @@ export const httpClient = {
     body: unknown,
     headers?: Record<string, string>
   ) {
-    return request<T>(path, {
+    return request<T>({
       method: 'POST',
+      path,
       headers,
       body: JSON.stringify(body),
     })
@@ -59,8 +124,9 @@ export const httpClient = {
     body: unknown,
     headers?: Record<string, string>
   ) {
-    return request<T>(path, {
+    return request<T>({
       method: 'PATCH',
+      path,
       headers,
       body: JSON.stringify(body),
     })
@@ -71,14 +137,15 @@ export const httpClient = {
     body: unknown,
     headers?: Record<string, string>
   ) {
-    return request<T>(path, {
+    return request<T>({
       method: 'PUT',
+      path,
       headers,
       body: JSON.stringify(body),
     })
   },
 
   delete<T>(path: string, headers?: Record<string, string>) {
-    return request<T>(path, { method: 'DELETE', headers })
+    return request<T>({ method: 'DELETE', path, headers })
   },
 }
