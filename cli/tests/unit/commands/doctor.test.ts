@@ -111,6 +111,26 @@ describe('spry doctor', () => {
       const results = await checkTsConfig(tempDir)
       expect(results.every((r) => r.status === 'pass')).toBe(true)
     })
+
+    it('fails when alias keys exist but point to wrong targets', async () => {
+      await writeFileWithDir(
+        join(tempDir, 'tsconfig.json'),
+        JSON.stringify({
+          compilerOptions: {
+            experimentalDecorators: true,
+            paths: {
+              '@features/*': ['./wrong/place/*'],
+              '@shared/*': ['./elsewhere/*'],
+            },
+          },
+        })
+      )
+      const results = await checkTsConfig(tempDir)
+      const aliasResult = results.find((r) =>
+        r.label.includes('aliases')
+      )
+      expect(aliasResult?.status).toBe('fail')
+    })
   })
 
   // ─── Dependencies ────────────────────────────────────────────────
@@ -144,6 +164,23 @@ describe('spry doctor', () => {
       expect(results[0].status).toBe('warn')
       expect(results[0].message).toContain('react-query')
       expect(results[0].message).toContain('zustand')
+    })
+
+    it('suggests `pnpm add` for pnpm projects (matches fixer command)', async () => {
+      await writeFileWithDir(
+        join(tempDir, 'package.json'),
+        JSON.stringify({ dependencies: {} })
+      )
+      const config = {
+        stateManagement: 'zustand' as const,
+        networkLayer: 'fetch' as const,
+        queryClient: 'react-query' as const,
+        packageManager: 'pnpm' as const,
+        checksum: '',
+      }
+      const results = await checkDependencies(tempDir, config)
+      expect(results[0].message).toContain('pnpm add')
+      expect(results[0].message).not.toContain('pnpm install')
     })
 
     it('checks for axios when config says axios', async () => {

@@ -1,5 +1,11 @@
 import { join } from 'node:path'
-import { readFileContent, writeFileWithDir, ensureDir, getTemplatesDir } from '../utils/fs.js'
+import {
+  readFileContent,
+  writeFileWithDir,
+  ensureDir,
+  fileExists,
+  getTemplatesDir,
+} from '../utils/fs.js'
 import type { NetworkLayer } from '../types/config.js'
 
 const TEMPLATES_DIR = join(getTemplatesDir(), 'shared')
@@ -70,5 +76,35 @@ export class ScaffoldGenerator {
     }
 
     return created
+  }
+
+  // Renders only the templates whose output path appears in `targets`,
+  // so existing files (potentially edited by the developer) are never overwritten.
+  async generateMissing(
+    srcRoot: string,
+    networkLayer: NetworkLayer,
+    targets: string[]
+  ): Promise<string[]> {
+    const wanted = new Set(targets)
+    const written: string[] = []
+
+    const allMappings = [
+      ...ERROR_TEMPLATES,
+      getHttpTemplate(networkLayer),
+    ]
+
+    for (const mapping of allMappings) {
+      if (!wanted.has(mapping.output)) continue
+      const outputPath = join(srcRoot, mapping.output)
+      // Re-check at write time so a stale `targets` list or a file that
+      // appeared between the check and the write never overwrites real content.
+      if (await fileExists(outputPath)) continue
+      const templatePath = join(TEMPLATES_DIR, mapping.template)
+      const content = await readFileContent(templatePath)
+      await writeFileWithDir(outputPath, content)
+      written.push(mapping.output)
+    }
+
+    return written
   }
 }
