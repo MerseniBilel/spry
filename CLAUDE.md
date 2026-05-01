@@ -78,7 +78,7 @@ When a developer adds methods to the contract and reruns `spry build`, Spry inje
 
 **File ownership model:**
 - **Spry-owned** (safe to generate/inject): use cases, RepositoryImpl, RemoteDataSource, queries hooks, di.ts, barrel indexes
-- **Developer-owned** (generated once, never touched): `<feature>Store.ts`, all domain models, abstract repository, screen views
+- **Developer-owned** (generated once, never touched): `<feature>Store.ts` (Zustand) or `<feature>Atoms.ts` (Jotai), all domain models, abstract repository, screen views
 
 ### Manifest & Config Integrity
 
@@ -144,7 +144,7 @@ These are no-op functions at runtime. Read statically via ts-morph AST by the CL
 ## Key Constraints
 
 - Never use "With" keyword in type names (e.g., never `BusinessWithRelations`) — use composition or other naming
-- Phase 1 MVP: REST + fetch/axios + React Query + Zustand only
+- Phase 1 MVP: REST + fetch/axios + React Query + Zustand or Jotai
 - DI pattern: simple singleton `di.ts` per feature — no DI container (no tsyringe, no inversify)
 - Mutations auto-invalidate feature queries: `queryClient.invalidateQueries({ queryKey: ['featureName'] })`
 - Pagination hooks use `useInfiniteQuery` without explicit generics — `pageParam` type inferred from `initialPageParam`

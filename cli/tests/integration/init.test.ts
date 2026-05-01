@@ -151,6 +151,23 @@ describe('spry init (integration)', () => {
     expect(httpClient).not.toContain('await fetch(')
   })
 
+  it('runs the full init pipeline with Jotai state management', async () => {
+    const choices = {
+      ...getDefaultChoices(),
+      stateManagement: 'jotai' as const,
+    }
+
+    const configWriter = new ConfigWriter()
+    await configWriter.write(projectRoot, choices)
+
+    const configReader = new ConfigReader()
+    const readConfig = await configReader.read(projectRoot)
+    expect(readConfig?.stateManagement).toBe('jotai')
+
+    const checker = new ConfigIntegrityChecker()
+    expect(await checker.verify(projectRoot)).toBe(true)
+  })
+
   it('detects tampered config after init', async () => {
     const choices = getDefaultChoices()
 

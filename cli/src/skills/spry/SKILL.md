@@ -8,7 +8,7 @@ You are helping a developer who uses **Spry** — a CLI tool that scaffolds prod
 
 ## How Spry Works
 
-The developer defines an abstract repository class with `@spry-cli/decorators`, and Spry generates the full implementation: use cases, data layer, React Query hooks, Zustand store, DI wiring.
+The developer defines an abstract repository class with `@spry-cli/decorators`, and Spry generates the full implementation: use cases, data layer, React Query hooks, a state container (Zustand store or Jotai atoms — chosen at `init` time), and DI wiring.
 
 ### Flow
 
@@ -123,7 +123,8 @@ features/<name>/
   presentation/
     hooks/<name>Queries.ts              ← React Query hooks
     hooks/index.ts                      ← barrel export
-    state/<name>Store.ts                ← Zustand (developer-owned)
+    state/<name>Store.ts                ← Zustand store, OR
+    state/<name>Atoms.ts                ← Jotai atoms (developer-owned)
     views/<Name>Screen.tsx              ← starter component (developer-owned)
     components/                         ← developer adds UI here
   di.ts                                 ← DI wiring

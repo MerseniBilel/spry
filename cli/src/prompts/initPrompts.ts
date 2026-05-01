@@ -52,6 +52,10 @@ export async function runInitPrompts(
         label: 'Zustand',
         hint: 'recommended',
       },
+      {
+        value: 'jotai' as const,
+        label: 'Jotai',
+      },
     ],
   })
   if (clack.isCancel(stateManagement)) cancelAndExit()

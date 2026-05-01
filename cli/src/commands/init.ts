@@ -22,7 +22,8 @@ import type {
 } from '../types/config.js'
 
 function getDependencies(choices: SpryUserChoices): string[] {
-  const deps = ['@spry-cli/decorators', '@tanstack/react-query', 'zustand']
+  const deps = ['@spry-cli/decorators', '@tanstack/react-query']
+  deps.push(choices.stateManagement === 'jotai' ? 'jotai' : 'zustand')
   if (choices.networkLayer === 'axios') deps.push('axios')
   return deps
 }

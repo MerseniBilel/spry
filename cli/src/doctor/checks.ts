@@ -139,7 +139,7 @@ export async function checkDependencies(
     const required = [
       '@spry-cli/decorators',
       '@tanstack/react-query',
-      'zustand',
+      config?.stateManagement === 'jotai' ? 'jotai' : 'zustand',
     ]
     if (config?.networkLayer === 'axios') {
       required.push('axios')

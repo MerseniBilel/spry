@@ -205,6 +205,52 @@ describe('spry doctor', () => {
       expect(results[0].status).toBe('warn')
       expect(results[0].message).toContain('axios')
     })
+
+    it('requires `jotai` instead of `zustand` when configured for Jotai', async () => {
+      await writeFileWithDir(
+        join(tempDir, 'package.json'),
+        JSON.stringify({
+          dependencies: {
+            '@spry-cli/decorators': '0.0.1',
+            '@tanstack/react-query': '5.0.0',
+            zustand: '5.0.0', // present but irrelevant for Jotai config
+          },
+        })
+      )
+      const config = {
+        stateManagement: 'jotai' as const,
+        networkLayer: 'fetch' as const,
+        queryClient: 'react-query' as const,
+        packageManager: 'npm' as const,
+        checksum: '',
+      }
+      const results = await checkDependencies(tempDir, config)
+      expect(results[0].status).toBe('warn')
+      expect(results[0].message).toContain('jotai')
+      expect(results[0].message).not.toContain('zustand')
+    })
+
+    it('passes when Jotai config has jotai installed', async () => {
+      await writeFileWithDir(
+        join(tempDir, 'package.json'),
+        JSON.stringify({
+          dependencies: {
+            '@spry-cli/decorators': '0.0.1',
+            '@tanstack/react-query': '5.0.0',
+            jotai: '2.0.0',
+          },
+        })
+      )
+      const config = {
+        stateManagement: 'jotai' as const,
+        networkLayer: 'fetch' as const,
+        queryClient: 'react-query' as const,
+        packageManager: 'npm' as const,
+        checksum: '',
+      }
+      const results = await checkDependencies(tempDir, config)
+      expect(results[0].status).toBe('pass')
+    })
   })
 
   // ─── Shared scaffold ─────────────────────────────────────────────

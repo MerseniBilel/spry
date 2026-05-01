@@ -40,4 +40,23 @@ describe('computeConfigChecksum', () => {
     })
     expect(a).not.toBe(b)
   })
+
+  it('produces distinct, stable hashes for zustand vs jotai', () => {
+    const base = {
+      networkLayer: 'fetch' as const,
+      queryClient: 'react-query' as const,
+      packageManager: 'npm' as const,
+    }
+    const zustand = computeConfigChecksum({
+      ...base,
+      stateManagement: 'zustand',
+    })
+    const jotai = computeConfigChecksum({
+      ...base,
+      stateManagement: 'jotai',
+    })
+    expect(zustand).not.toBe(jotai)
+    expect(zustand).toMatch(/^[a-f0-9]{64}$/)
+    expect(jotai).toMatch(/^[a-f0-9]{64}$/)
+  })
 })

@@ -68,7 +68,7 @@ features/profile/
 - **Contract-driven** — write the abstract class, Spry generates everything else
 - **Clean Architecture by default** — domain, data, and presentation layers are generated with strict boundaries
 - **Incremental builds** — add a method to your contract, run `spry build` again, and only the new code is injected
-- **Tech-choice flexibility** — pick fetch or axios, React Query, Zustand — templates swap without touching your code
+- **Tech-choice flexibility** — pick fetch or axios, React Query, Zustand or Jotai — templates swap without touching your code
 - **Typed error handling** — generates `DomainError`, `HttpError`, `NetworkError` hierarchy with typed React Query integration
 - **Zero-config DI** — simple singleton `di.ts` per feature, no heavy DI containers
 
@@ -191,7 +191,7 @@ Spry tracks what it owns vs. what you own:
 The generated code uses:
 
 - **React Query** — server state (queries, mutations, caching)
-- **Zustand** — client/UI state only
+- **Zustand** or **Jotai** — client/UI state only (chosen at `spry init`)
 - **fetch** or **axios** — HTTP layer (normalized behind `httpClient.ts`)
 - **TypeScript** — strict mode, zero `any`
 
@@ -217,7 +217,7 @@ This teaches the AI assistant how to use Spry — create features, write contrac
 - [x] REST + fetch/axios + React Query + Zustand
 - [x] `spry doctor` command
 - [x] `spry doctor --fix` (auto-repair project issues)
-- [ ] Jotai support
+- [x] Jotai support
 - [ ] GraphQL + urql + codegen
 - [ ] Test generation (Vitest for use cases)
 - [ ] Maestro E2E scaffold
