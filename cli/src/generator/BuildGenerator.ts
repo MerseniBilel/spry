@@ -102,22 +102,27 @@ export class BuildGenerator {
       `presentation/hooks/${context.featureName}Queries.ts`
     )
 
-    // Store (developer-owned — only on first build)
+    // Store/Atoms (developer-owned — only on first build)
+    const storeFilename = templates.store.outputFilename(
+      context.featureName
+    )
     const storePath = join(
       featureDir,
       'presentation',
       'state',
-      `${context.featureName}Store.ts`
+      storeFilename
     )
     if (await fileExists(storePath)) {
       result.skipped.push(
-        `presentation/state/${context.featureName}Store.ts (developer-owned)`
+        `presentation/state/${storeFilename} (developer-owned)`
       )
     } else {
-      await this.renderTemplate(templates.store, storePath, context)
-      result.created.push(
-        `presentation/state/${context.featureName}Store.ts`
+      await this.renderTemplate(
+        templates.store.template,
+        storePath,
+        context
       )
+      result.created.push(`presentation/state/${storeFilename}`)
     }
 
     // Screen view (developer-owned — only on first build)
@@ -327,7 +332,7 @@ export class BuildGenerator {
 
     // Skip developer-owned
     result.skipped.push(
-      `${context.featureName}Store.ts (developer-owned)`
+      `${templates.store.outputFilename(context.featureName)} (developer-owned)`
     )
 
     return result

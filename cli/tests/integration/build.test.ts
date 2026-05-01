@@ -292,6 +292,65 @@ describe('spry build (integration)', () => {
     expect(result.created.length).toBeGreaterThanOrEqual(9)
   })
 
+  it('generates Atoms.ts for Jotai-configured projects', async () => {
+    // Override the default Zustand setup with a Jotai config.
+    const jotaiRoot = await mkdtemp(join(tmpdir(), 'spry-jotai-'))
+    const jotaiSrc = join(jotaiRoot, 'src')
+    const configWriter = new ConfigWriter()
+    const jotaiConfig = await configWriter.write(jotaiRoot, {
+      ...getDefaultChoices(),
+      stateManagement: 'jotai',
+    })
+    const manifestWriter = new ManifestWriter()
+    await manifestWriter.writeEmpty(jotaiRoot)
+    const featureGen = new FeatureGenerator()
+    await featureGen.generate(jotaiSrc, 'profile')
+    await manifestWriter.addFeature(jotaiRoot, 'profile')
+
+    const repoPath = join(
+      jotaiSrc,
+      'features/profile/domain/repositories/ProfileRepository.ts'
+    )
+    await copyFixture('ProfileRepository.simple.ts', repoPath)
+
+    const context = parseAndNormalize(repoPath, 'profile')
+    const generator = new BuildGenerator()
+    await generator.generateAll(jotaiSrc, jotaiConfig, context)
+
+    // Atoms.ts is generated, Store.ts is NOT
+    expect(
+      await exists(
+        join(jotaiSrc, 'features/profile/presentation/state/profileAtoms.ts')
+      )
+    ).toBe(true)
+    expect(
+      await exists(
+        join(jotaiSrc, 'features/profile/presentation/state/profileStore.ts')
+      )
+    ).toBe(false)
+
+    // Atoms file imports from jotai, not zustand
+    const atoms = await readFile(
+      join(jotaiSrc, 'features/profile/presentation/state/profileAtoms.ts'),
+      'utf-8'
+    )
+    expect(atoms).toContain("from 'jotai'")
+    expect(atoms).toContain('atom<')
+    expect(atoms).not.toContain('zustand')
+
+    // Second build skips the atoms file (developer-owned)
+    const result2 = await generator.generateAll(
+      jotaiSrc,
+      jotaiConfig,
+      context
+    )
+    expect(
+      result2.skipped.some((s) => s.includes('profileAtoms.ts'))
+    ).toBe(true)
+
+    await rm(jotaiRoot, { recursive: true, force: true })
+  })
+
   it('generates correct datasource for fetch config', async () => {
     const repoPath = join(
       srcRoot,
