@@ -105,6 +105,9 @@ spry build profile --force     # regenerate all Spry-owned files
 spry build all                 # build every feature
 spry format                    # format generated code with Prettier
 spry skill                     # install Claude Code AI skill
+spry doctor                    # validate project setup and diagnose issues
+spry doctor --fix              # auto-repair fixable project-level issues
+spry doctor --fix --dry-run    # preview repairs without writing
 ```
 
 ## How It Works
@@ -156,6 +159,23 @@ Installed in your Expo project. Decorators are read statically via AST — no ru
 
 This file is integrity-checked on every build. If manually modified, Spry will ask you to re-run `spry init`.
 
+## Diagnostics
+
+`spry doctor` validates your project setup — config integrity, manifest, tsconfig (decorators + path aliases), ESLint, shared scaffold, dependencies, and per-feature contract/build/manifest sync.
+
+`spry doctor --fix` auto-repairs project-level issues:
+
+| Issue | Fix |
+|---|---|
+| Tampered `.spryrc.json` checksum | Recomputes and rewrites |
+| Missing `.spry-manifest.json` | Creates an empty one |
+| `tsconfig.json` missing `experimentalDecorators` or path aliases | Patches in place |
+| Missing `eslint.config.js` rules | Patches in place |
+| Missing shared scaffold (`DomainError.ts`, `httpClient.ts`) | Regenerates only the missing files (existing edits preserved) |
+| Missing dependencies | Installs via the detected package manager |
+
+Use `--fix --dry-run` to preview repairs without writing. Feature-level issues (missing contract, drifted manifest) are surfaced with manual instructions, not auto-fixed.
+
 ## File Ownership
 
 Spry tracks what it owns vs. what you own:
@@ -196,7 +216,7 @@ This teaches the AI assistant how to use Spry — create features, write contrac
 
 - [x] REST + fetch/axios + React Query + Zustand
 - [x] `spry doctor` command
-- [ ] `spry doctor --fix` (auto-repair project issues)
+- [x] `spry doctor --fix` (auto-repair project issues)
 - [ ] Jotai support
 - [ ] GraphQL + urql + codegen
 - [ ] Test generation (Vitest for use cases)

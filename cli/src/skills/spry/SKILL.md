@@ -18,6 +18,8 @@ spry new <feature> → creates domain skeleton
   (developer writes contract + models)
 spry build <feature> → generates all implementation files
 spry format        → runs Prettier on feature files
+spry doctor        → validates project setup
+spry doctor --fix  → auto-repairs project-level issues
 ```
 
 ## When the user asks to create a new feature
@@ -103,6 +105,7 @@ spry format
 - When adding methods to an existing feature, just edit the repository and run `spry build` again — it detects new methods and injects them
 - Never edit Spry-owned files (use cases, repoImpl, dataSource, queries, di.ts) — they get regenerated
 - Developer-owned files (store, screen, models) are generated once and never overwritten
+- If the project setup looks broken (missing manifest, stale tsconfig, missing deps), suggest `spry doctor` first to diagnose, then `spry doctor --fix` to repair. Use `--fix --dry-run` to preview repairs without writing.
 
 ## Generated File Structure
 
